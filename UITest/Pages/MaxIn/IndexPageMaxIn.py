@@ -1,7 +1,7 @@
 from poium import PageElement
 from selenium.webdriver.common.by import By
 
-from UITest.util.SelectByStrOrIndex import SelectByStrOrIndex
+from UITest.controls.SelectByStrOrIndex import SelectByStrOrIndex
 
 
 class IndexPageMaxIn:
