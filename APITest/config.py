@@ -8,7 +8,7 @@ SYS_CONF = {
 
 ROLE_CONF = {
     # roleName : (account,password,appID)
-    "sysAdmin": ("45", "12345678","EXWSP")
+    "sys_admin": ("45", "12345678", "EXWSP")
 }
 
 EXSMS_HOST = "http://10.4.3.131:8020/EXSMS/service"

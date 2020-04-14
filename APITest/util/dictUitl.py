@@ -16,7 +16,7 @@ def assert_dict_contain(dict1, dict2):
     :param dict2: 字典
     :return: bool
     """
-    with allure.step("判断 {} 是否被 {} 包含".format(dict1, dict2)):
+    with allure.step("判断>{} 是否被>{} 包含".format(dict1, dict2)):
         if dict1 == {} and dict2 != {}:
             return False
         return _dict_in(dict1, dict2)
@@ -60,7 +60,7 @@ def _dict_in(dict1, dict2):
     :return:
     """
     for i, j in _traverse(dict1):
-        with allure.step("断言数据存在路径》{}《 对应的值为： 》{}《".format(i, j)):
+        with allure.step("断言数据存在路径>{},对应的值为:>{}".format(i, j)):
             assert_obj = dict2.copy()
             for path in i:
                 try:
@@ -69,8 +69,3 @@ def _dict_in(dict1, dict2):
                     return False
 
             return j == assert_obj
-
-
-if __name__ == '__main__':
-    for i, j in _traverse({"data": {"deep": ["deepData1", "deepData2"]}}):
-        print(i, j)

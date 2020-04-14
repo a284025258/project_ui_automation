@@ -23,10 +23,6 @@ class ApiTestCaseData(Base):
     exp_res_body = Column(Text, comment='期望响应体，以json添加')
     last_excute_body = Column(Text, comment='上一次成功执行的返回值')
 
-    __mapper_args__ = {
-        'order_by': order.desc()
-    }
-
     def __str__(self):
         return "<{}: apipath={}, desc={}>".format(self.__class__.__name__, self.apipath, self.desc)
 

@@ -3,6 +3,7 @@ from json import JSONDecodeError
 
 import allure
 import requests
+from jsonpath import jsonpath
 
 from APITest.config import SYS_CONF, ROLE_CONF
 from APITest.util.AESUtil import AESUtil
@@ -23,7 +24,7 @@ def _get_token(roleName):
     host = SYS_CONF[appID]['host']
     key = SYS_CONF[appID]['key']
     authPath = "/sso/static/login"
-    token_path = ["data", "token"]
+    token_path = "$.data.token"
     post_data = {"data": {
         "userid": account,
         "appid": appID,
@@ -32,7 +33,7 @@ def _get_token(roleName):
     with allure.step("获取token"):
         with allure.step("建立连接"):
             try:
-                res = requests.request("POST", host+authPath, json=post_data)
+                res = requests.request("POST", host + authPath, json=post_data)
             except ConnectionError as exc:
                 logger.error(exc)
                 raise exc
@@ -42,12 +43,10 @@ def _get_token(roleName):
             except JSONDecodeError as exc:
                 logger.error(exc)
                 raise exc
-        for path in token_path:
-            _token = _token.get(path, {})
-        if _token == {}:
-            logger.warning("没有获取到token，返回空字符串")
+        token = jsonpath(_token, token_path)
+        if token:
+            logger.info("获取到的token为:{}".format(token[0]))
+            return token[0]
         else:
-            logger.info("获取到的token为:{}".format(_token))
-        token = _token if _token != {} else ""
-
-        return token
+            logger.warning("没有获取到token，返回空字符串")
+            return ""
