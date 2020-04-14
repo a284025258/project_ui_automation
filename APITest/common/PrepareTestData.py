@@ -93,13 +93,13 @@ class PrepareTestData:
         """
         sql = self.base_sql
         if self.product_name:
-            sql += "and p.product_name in {}".format(tuple(self.product_name))
+            sql += "and p.product_name in ('{}')".format("','".join(self.product_name))
         if self.module_name:
-            sql += "and m.appid in {}".format(tuple(self.module_name))
+            sql += "and m.appid in ('{}')".format("','".join(self.module_name))
         if self.level:
-            sql += "and t.`level` in {}".format(tuple(self.level))
+            sql += "and t.`level` in ('{}')".format("','".join(self.level))
         if self.apipath:
-            sql += "and m.apipath in {}".format(tuple(self.apipath))
+            sql += "and m.apipath in ('{}')".format("','".join(self.apipath))
         sql += "ORDER BY t.`order` DESC"
         return sql
 
