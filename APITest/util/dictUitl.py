@@ -6,7 +6,12 @@
 (['data', 'deep', 0],"deepData1")
 (['data', 'deep', 1],"deepData2")
 """
+import logging
+
 import allure
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 
 def assert_dict_contain(dict1, dict2):
@@ -18,7 +23,8 @@ def assert_dict_contain(dict1, dict2):
     """
     with allure.step("判断>{} 是否被>{} 包含".format(dict1, dict2)):
         if dict1 == {} and dict2 != {}:
-            return False
+            logger.info("空字典设置默认为错误")
+            assert False
         return _dict_in(dict1, dict2)
 
 
@@ -66,6 +72,7 @@ def _dict_in(dict1, dict2):
                 try:
                     assert_obj = assert_obj[path]
                 except (IndexError, KeyError):
-                    return False
+                    logger.info(f"不存在{i}")
+                    assert False
 
-            return j == assert_obj
+            assert j == assert_obj

@@ -12,15 +12,15 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 
-def _get_token(roleName):
+def _get_token(role_name):
     """
     获取token
-    :param roleName:角色名
+    :param role_name:角色名
     :return:
     """
-    account = ROLE_CONF[roleName][0]
-    password = ROLE_CONF[roleName][1]
-    appID = ROLE_CONF[roleName][2]
+    account = ROLE_CONF[role_name][0]
+    password = ROLE_CONF[role_name][1]
+    appID = ROLE_CONF[role_name][2]
     host = SYS_CONF[appID]['host']
     key = SYS_CONF[appID]['key']
     authPath = "/sso/static/login"

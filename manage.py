@@ -34,5 +34,5 @@ RUN_PATH = setup().api_path
 
 if __name__ == '__main__':
     if setup().mode in ["s", "starttest"]:
-        pytest.main(["-vv", "-s", APITESTCASE_HOME, "--color=no", f"--alluredir={REPORT_XML_DIR}"])
+        pytest.main([APITESTCASE_HOME, "-s", "--capture=no", "--color=no", f"--alluredir={REPORT_XML_DIR}"])
         os.system(f"allure generate  {REPORT_XML_DIR} -o {REPORT_HTML_DIR} --clean")
