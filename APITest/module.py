@@ -45,7 +45,10 @@ class Module(Base):
 
 class Param(Base):
     """
-    参数表，用于替换接口数据中${param}的值
+    参数表，用于替换接口数据中${param}的值,因为是替换为json,所以需要在表中数据构造时,进行限制,
+    对string数据需要增加"",如"data"
+    对bool数据需要转换为json,如true,false
+    对None数据需要转化为json,如null
     """
     __tablename__ = 'param'
 

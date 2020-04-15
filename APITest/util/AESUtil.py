@@ -1,6 +1,8 @@
 import binascii
+
 from Crypto.Cipher import AES
 from Crypto.Util import Padding
+
 
 # pip install pycryptodome
 
@@ -20,8 +22,8 @@ class AESUtil:
     # BASE64 enc_fun = base64.b64decode
     encoding = 'utf8'
 
-    def __init__(self, key):
-        self.key = key.encode(self.encoding)
+    def __init__(self, key_):
+        self.key = key_.encode(self.encoding)
         self.cipher = AES.new(self.key, self.model)
 
     def encrypt(self, unencrypted_str):

@@ -46,7 +46,7 @@ def _get_token(roleName):
         token = jsonpath(_token, token_path)
         if token:
             logger.info("获取到的token为:{}".format(token[0]))
-            return token[0]
+            return f'"{token[0]}"'
         else:
             logger.warning("没有获取到token，返回空字符串")
-            return ""
+            return '""'
