@@ -5,11 +5,10 @@ from UITest.Pages.LoginPage import LoginPage
 from config import DRIVER_CHROME
 
 
-
-
 @pytest.fixture(scope='session')
 def loginPage():
     driver = Chrome(DRIVER_CHROME)
+    driver.find_element().get_attribute()
     driver.get("http://10.4.3.137:8000/exwsp_web/#/login")
     loginPage = LoginPage(driver)
     yield loginPage

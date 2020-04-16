@@ -6,13 +6,18 @@ from sqlalchemy import create_engine
 from sqlalchemy import text
 from sqlalchemy.orm import sessionmaker
 
-from APITest.common.TestCase import TestCase
-from APITest.common.getToken import _get_token
+from APITest.base.TestCase import TestCase
+from APITest.base.getToken import _get_token
+from APITest.config import SYS_CONF
 from APITest.module import ApiTestCaseData, Param
 from config import DATABASES
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
+
+
+def _prepare_url(app_id, url):
+    return SYS_CONF[app_id]['host'] + url
 
 
 class PrepareTestData:
@@ -26,7 +31,7 @@ class PrepareTestData:
 
     base_sql = r"""
     SELECT
-    p.product_name pname,p.appid appid,m.appid mname ,t.`desc` ,CONCAT(p.`host`,m.module_path,t.apipath) url,
+    p.product_name pname,p.appid appid,m.appid mname ,t.`desc` ,CONCAT(m.module_path,t.apipath) url,
     t.method,t.req_headers,t.req_body,t.status_code,t.exp_res_body
     FROM
     api_testcase_data t
@@ -82,7 +87,7 @@ class PrepareTestData:
             case["req_headers"] = self._transformation(case["req_headers"])
             case["req_body"] = self._transformation(case["req_body"])
             case["exp_res_body"] = self._transformation(case["exp_res_body"])
-
+            case["url"] = _prepare_url(case["appid"], case["url"])
         return [TestCase(case_info) for case_info in result]
 
     @property

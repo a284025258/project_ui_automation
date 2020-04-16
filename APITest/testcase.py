@@ -2,7 +2,7 @@ import logging
 
 import pytest
 
-from APITest.common.PrepareTestData import PrepareTestData
+from APITest.base.PrepareTestData import PrepareTestData
 from manage import RUN_MODULE, RUN_LEVEL, RUN_PATH, RUN_PRODUCT
 
 logger = logging.getLogger(__name__)

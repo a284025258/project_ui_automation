@@ -38,7 +38,8 @@ class Module(Base):
     module_path = Column(String(255), server_default=text("''"))
 
     def __str__(self):
-        return "<{}: module={}, module_path={}>".format(self.__class__.__name__, self.module, self.module_path)
+        return "<{}: module={}, module_path={}>".format(self.__class__.__name__,
+                                                        self.module, self.module_path)
 
     __repr__ = __str__
 
@@ -69,10 +70,9 @@ class Product(Base):
     id = Column(INTEGER(11), primary_key=True)
     product_name = Column(String(255), server_default=text("''"))
     appid = Column(String(11), server_default=text("''"))
-    host = Column(String(255), server_default=text("''"))
 
     def __str__(self):
-        return "<{}: product_name={}, value={}, host={}>".format(self.__class__.__name__,
-                                                                 self.product_name, self.appid, self.host)
+        return "<{}: product_name={}, value={}>".format(self.__class__.__name__,
+                                                        self.product_name, self.appid)
 
     __repr__ = __str__
