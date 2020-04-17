@@ -22,11 +22,7 @@ def setup():
     return parser.parse_args()
 
 
-global RUN_PRODUCT
-global RUN_MODULE
-global RUN_LEVEL
-global RUN_PATH
-
+# 获取启动配置
 RUN_PRODUCT = setup().product
 RUN_MODULE = setup().module
 RUN_LEVEL = setup().level
@@ -34,6 +30,10 @@ RUN_PATH = setup().api_path
 
 if __name__ == '__main__':
     if setup().mode in ["s", "starttest"]:
-        pytest.main([APITESTCASE_HOME, "-s", "--capture=no", f"--html={REPORT_HTML_FILE}", "--self-contained-html",
-                     "--color=no", f"--alluredir={REPORT_XML_DIR}"])
+        pytest.main([
+            APITESTCASE_HOME, "-q", "-s", "--capture=no",
+            f"--html={REPORT_HTML_FILE}", "--self-contained-html",
+            "--color=no", f"--alluredir={REPORT_XML_DIR}",
+            "--reruns=1", "--reruns-delay=2"
+        ])
         os.system(f"allure generate  {REPORT_XML_DIR} -o {REPORT_HTML_DIR} --clean")

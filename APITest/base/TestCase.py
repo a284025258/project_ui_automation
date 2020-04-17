@@ -5,6 +5,7 @@ from json.decoder import JSONDecodeError
 import allure
 import requests
 
+from APITest.base.getToken import TokenAuth
 from APITest.util.dictUitl import assert_dict_contain
 
 logger = logging.getLogger(__name__)
@@ -18,15 +19,18 @@ class TestCase:
 
     def run(self) -> bool:
         with allure.step("获取请求"):
-            res = requests.request(self.info["method"], self.info["url"],
+            res = requests.request(self.info["method"],
+                                   self.info["url"],
                                    headers=self.info["req_headers"],
-                                   json=self.info["req_body"], timeout=5)
+                                   json=self.info["req_body"],
+                                   auth=TokenAuth(self.info["role_name"]),
+                                   timeout=5)
             try:
                 logger.info(f"相应信息{json.dumps(res.json())}")
-            except JSONDecodeError:
+            except JSONDecodeError as exc:
                 logger.error("响应json化失败，输出原始信息")
                 logger.error(res.text)
-                raise
+                raise exc
         with allure.step("断言响应码"):
             logger.info(f"断言响应码{self.info['status_code']}=={res.status_code}")
             assert self.info["status_code"] == res.status_code, \

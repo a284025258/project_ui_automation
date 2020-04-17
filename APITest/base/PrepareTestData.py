@@ -31,7 +31,7 @@ class PrepareTestData:
 
     base_sql = r"""
     SELECT
-    p.product_name pname,p.appid appid,m.appid mname ,t.`desc` ,CONCAT(m.module_path,t.apipath) url,
+    p.product_name pname,p.appid appid,m.appid mname ,t.role_name,t.`desc`,CONCAT(m.module_path,t.apipath) url,
     t.method,t.req_headers,t.req_body,t.status_code,t.exp_res_body
     FROM
     api_testcase_data t
@@ -84,7 +84,6 @@ class PrepareTestData:
         """
         result = self._get_base_test_data()
         for case in result:
-            case["req_headers"] = self._transformation(case["req_headers"])
             case["req_body"] = self._transformation(case["req_body"])
             case["exp_res_body"] = self._transformation(case["exp_res_body"])
             case["url"] = _prepare_url(case["appid"], case["url"])
@@ -112,7 +111,7 @@ class PrepareTestData:
         """获取原始数据"""
         res_rows = self._conn.execute(text(self.execute_sql)).fetchall()
         self._conn.close()
-        result = [dict(zip(result.keys(), result)) for result in res_rows]
+        result = [dict(zip(result.keys(), result or "")) for result in res_rows]
         return result
 
     def _transformation(self, s):
@@ -121,6 +120,8 @@ class PrepareTestData:
         :param s: str
         :return: 转化后的dict
         """
+        if s is None:
+            s = "{}"
 
         def _trans(match):
             key = match.group()[2:-1]
@@ -142,7 +143,6 @@ class PrepareTestData:
             param.value = new
             logger.info(f"{param.key}更新<{old}>为<{new}>")
         self._conn.commit()
-        self._conn.close()
 
 
 def get_session():
