@@ -21,11 +21,11 @@ def assert_dict_contain(dict1, dict2):
     :param dict2: 字典
     :return: bool
     """
-    with allure.step("判断>{} 是否被>{} 包含".format(dict1, dict2)):
-        if dict1 == {} and dict2 != {}:
-            logger.info("空字典设置默认为错误")
-            assert False
-        return _dict_in(dict1, dict2)
+
+    if dict1 == {} and dict2 != {}:
+        logger.info("空字典设置默认为错误")
+        assert False
+    return _dict_in(dict1, dict2)
 
 
 def _traverse(_obj, path=None):

@@ -1,3 +1,5 @@
+from time import sleep
+
 import allure
 import pytest
 
@@ -8,18 +10,18 @@ class TestLogin:
     """
 
     @allure.severity(allure.severity_level.NORMAL)
-    def test_login_fail_message(self, loginPage, logData):
+    def test_login_fail_message(self, loginPage, login_data):
         """
         测试登录失败时的提示是否正确
         """
-        loginPage.refresh_verify_code()
 
-        loginPage.login(logData["username"], logData["password"], logData["verify_code"])
+        loginPage.login(login_data["username"], login_data["password"])
         with allure.step("断言错误消息"):
-            assert logData["check_text"] == loginPage.error_message
+            assert login_data["check_text"] == loginPage.error_message
         with allure.step("断言登录状态"):
             assert not loginPage.is_login
-        loginPage.screenshots()
+        sleep(3)
+        # loginPage.screenshots()
 
     @pytest.mark.skip
     def test_login_success(self):

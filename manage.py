@@ -3,7 +3,7 @@ import os
 
 import pytest
 
-from config import APITESTCASE_HOME, REPORT_XML_DIR, REPORT_HTML_DIR, REPORT_HTML_FILE
+from config import APITESTCASE_HOME, REPORT_XML_DIR, REPORT_HTML_DIR, REPORT_HTML_FILE, REPORT_LINK
 
 
 def setup():
@@ -29,11 +29,13 @@ RUN_LEVEL = setup().level
 RUN_PATH = setup().api_path
 
 if __name__ == '__main__':
+
     if setup().mode in ["s", "starttest"]:
         pytest.main([
-            APITESTCASE_HOME, "-q", "-s", "--capture=no",
+            APITESTCASE_HOME, "-q", "-s",
             f"--html={REPORT_HTML_FILE}", "--self-contained-html",
             "--color=no", f"--alluredir={REPORT_XML_DIR}",
-            "--reruns=1", "--reruns-delay=2"
+            # "--reruns=1", "--reruns-delay=2"
         ])
         os.system(f"allure generate  {REPORT_XML_DIR} -o {REPORT_HTML_DIR} --clean")
+        print(f"place see report at {REPORT_LINK}")

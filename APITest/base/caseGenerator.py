@@ -5,7 +5,7 @@
 import json
 
 
-def ApiInfo():
+def api_info():
     with open(r"E:\PROJECT\TestAZ\static\apiInfo\swaggerApi.json", encoding="utf8") as f:
         swagger = json.loads(f.read())
 
@@ -28,12 +28,6 @@ def ApiInfo():
     return valList
 
 
-
-
 if __name__ == '__main__':
-    i = 0
-    for info in ApiInfo():
-        i += 1
-        if i == 50:
-            print(info)
-            break
+    for info in api_info():
+        print(info["apiPath"])

@@ -1,3 +1,4 @@
+import asyncio
 import datetime
 import time
 
@@ -31,4 +32,4 @@ def pytest_terminal_summary(terminalreporter, exitstatus, config):
     end = time.strftime("%Y-%m-%d %H:%M:%S")
     runtime = datetime.datetime.utcfromtimestamp(time.time() - terminalreporter._sessionstarttime)
 
-    send_test_report(begin, end, runtime.strftime("%H:%M:%S"), [passed, failed, skipped])
+    asyncio.run(send_test_report(begin, end, runtime.strftime("%H:%M:%S"), [passed, failed, skipped]))

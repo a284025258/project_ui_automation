@@ -7,7 +7,6 @@ from sqlalchemy import text
 from sqlalchemy.orm import sessionmaker
 
 from APITest.base.TestCase import TestCase
-from APITest.base.getToken import _get_token
 from APITest.config import SYS_CONF
 from APITest.module import ApiTestCaseData, Param
 from config import DATABASES
@@ -23,7 +22,7 @@ def _prepare_url(app_id, url):
 class PrepareTestData:
     """
     获取测试数据数据,
-    PrepareTestData(product_name:list, module_name:list, level:list, apipath:list).get_data()
+    PrepareTestData(product_name, module_name, level, apipath).get_data()
     """
 
     CaseBase = ApiTestCaseData
@@ -54,7 +53,6 @@ class PrepareTestData:
         self.level = level
         self.apipath = apipath
         self._conn = get_session()
-        self._update_token()  # token 更新
         # 参数表中的参数全量读取为字典
         self._param = self.get_param()
 
@@ -130,19 +128,6 @@ class PrepareTestData:
         result = re.subn(r"\${(.*?)}", _trans, s)
 
         return json.loads(result[0])
-
-    def _update_token(self):
-        """
-        根据参数表中尾部带有_token的字段进行token更新
-        :return:
-        """
-        param_list = self._conn.query(self.ParamBase).filter(self.ParamBase.key.endswith('_token')).all()
-        for param in param_list:
-            old = param.value
-            new = _get_token(param.key[:-6])
-            param.value = new
-            logger.info(f"{param.key}更新<{old}>为<{new}>")
-        self._conn.commit()
 
 
 def get_session():

@@ -5,7 +5,8 @@ from json.decoder import JSONDecodeError
 import allure
 import requests
 
-from APITest.base.getToken import TokenAuth
+from APITest.base.authentication import JF_CEMS_4_0_TokenAuth
+from APITest.config import TimeoutTime
 from APITest.util.dictUitl import assert_dict_contain
 
 logger = logging.getLogger(__name__)
@@ -23,8 +24,8 @@ class TestCase:
                                    self.info["url"],
                                    headers=self.info["req_headers"],
                                    json=self.info["req_body"],
-                                   auth=TokenAuth(self.info["role_name"]),
-                                   timeout=5)
+                                   auth=JF_CEMS_4_0_TokenAuth(self.info["role_name"]),
+                                   timeout=TimeoutTime)
             try:
                 logger.info(f"相应信息{json.dumps(res.json())}")
             except JSONDecodeError as exc:

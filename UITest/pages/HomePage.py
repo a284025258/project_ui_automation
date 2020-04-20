@@ -1,8 +1,8 @@
 import allure
 from poium import PageElement
 
-from UITest.Pages.BasePage import BasePage
-from UITest.Pages.IndexPage import IndexPage
+from UITest.pages.BasePage import BasePage
+from UITest.pages.IndexPage import IndexPage
 
 
 class HomePage(BasePage):
