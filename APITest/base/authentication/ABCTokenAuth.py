@@ -1,3 +1,4 @@
+import threading
 from abc import abstractmethod, ABCMeta
 
 from requests.auth import AuthBase
@@ -5,32 +6,39 @@ from requests.auth import AuthBase
 
 class ABCTokenAuth(AuthBase, metaclass=ABCMeta):
     """
-    用单例模式-改实现的
+    单例模式模式-改
     token鉴权的抽象基类
     实现了
     重复请求控制
     token缓存
     """
-    _objs = None
+    _instance_lock = threading.Lock()
+    _instances = None
 
-    def __new__(cls, *args, **kwargs):
-        if cls._objs is None:
-            cls._objs = {}
+    def __new__(cls, role_name, *args, **kwargs):
+        with ABCTokenAuth._instance_lock:
 
-        if args not in cls._objs:
-            instance = super().__new__(cls)
-            cls._objs[args] = instance
-            return instance
-        else:
-            return cls._objs[args]
+            if cls._instances is None:
+                cls._instances = {}
 
-    def __init__(self, *args, **kwargs):
+            if role_name not in cls._instances:
+                instance = super().__new__(cls)
+                instance._flag = True
+                cls._instances[role_name] = instance
+                return instance
+            else:
+                return cls._instances[role_name]
+
+    def __init__(self, role_name, *args, **kwargs):
         """
         :param role_name:
         """
-        self._token = None
-        self.args = args
-        self.kwargs = kwargs
+        if self._flag:
+            self._token = None
+            self.args = args
+            self.kwargs = kwargs
+            self.role_name = role_name
+            self._flag = False
 
     def __call__(self, r):
         r.headers['token'] = self.token
