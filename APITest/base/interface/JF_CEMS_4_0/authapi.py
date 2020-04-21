@@ -3,7 +3,7 @@ import logging
 import requests
 from jsonpath import jsonpath
 
-from APITest.base.interface.base_api import ABCAPIBase
+from APITest.base.interface.base_api import ABCAuthAPIBase
 from APITest.config import SYS_CONF, TimeoutTime
 from APITest.util.AESUtil import AESUtil
 
@@ -11,12 +11,14 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 
-class JF_CEMS_4_0AuthABCAPI(ABCAPIBase):
+class JF_EXWSP_4_0AuthApi(ABCAuthAPIBase):
     """
+    EXWSP
+    EXSMS
     综合考务管理系统4.0鉴权API实现
     """
 
-    path = "/sso/static/login"
+    path = None
     token_path = "$.data.token"
 
     def __init__(self, account, password, appid):
@@ -26,9 +28,27 @@ class JF_CEMS_4_0AuthABCAPI(ABCAPIBase):
         self.appid = appid
 
     def _send(self):
+        if self.appid == "EXWSP":
+            return self._send_to_EXWSP()
+        elif self.appid == "EXSMS":
+            return self._send_to_EXSMS()
+        else:
+            raise ValueError(f"{self.appid}不支持")
+
+    def _send_to_EXWSP(self):
+        self.path = "/sso/static/login"
         data_to_post = {"data": {
             "userid": self.account,
             "appid": self.appid,
+            "password": AESUtil(self.key).encrypt(self.password)
+        }}
+        res = requests.post(self.host + self.path, json=data_to_post, timeout=TimeoutTime)
+        return res
+
+    def _send_to_EXSMS(self):
+        self.path = "/api/sso/login"
+        data_to_post = {"data": {
+            "userid": self.account,
             "password": AESUtil(self.key).encrypt(self.password)
         }}
         res = requests.post(self.host + self.path, json=data_to_post, timeout=TimeoutTime)
@@ -64,4 +84,4 @@ class JF_CEMS_4_0AuthABCAPI(ABCAPIBase):
 
 
 if __name__ == '__main__':
-    print(JF_CEMS_4_0AuthABCAPI("45", "12345678", "EXWSP").token)
+    print(JF_EXWSP_4_0AuthApi("45", "12345678", "EXWSP").token)

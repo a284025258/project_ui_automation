@@ -32,10 +32,9 @@ if __name__ == '__main__':
 
     if setup().mode in ["s", "starttest"]:
         pytest.main([
-            APITESTCASE_HOME, "-q", "-s",
+            APITESTCASE_HOME, "-q", "-s","-vv",
             f"--html={REPORT_HTML_FILE}", "--self-contained-html",
             "--color=no", f"--alluredir={REPORT_XML_DIR}",
             # "--reruns=1", "--reruns-delay=2"
         ])
-        os.system(f"allure generate  {REPORT_XML_DIR} -o {REPORT_HTML_DIR} --clean")
-        print(f"place see report at {REPORT_LINK}")
+        os.system(f"allure serve -p 8080 {REPORT_XML_DIR}")

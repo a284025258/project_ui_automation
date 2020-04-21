@@ -2,7 +2,7 @@ import logging
 
 from APITest.base.authentication.ABCTokenAuth import ABCTokenAuth
 from APITest.base.badconfexc import BadConfException
-from APITest.base.interface.JF_CEMS_4_0.authapi import JF_CEMS_4_0AuthABCAPI
+from APITest.base.interface.JF_CEMS_4_0.authapi import JF_EXWSP_4_0AuthApi
 from APITest.config import ROLE_CONF
 
 logger = logging.getLogger(__name__)
@@ -29,5 +29,5 @@ class JF_CEMS_4_0_TokenAuth(ABCTokenAuth):
         except (KeyError, IndexError):
             raise BadConfException(f"请检查配置文件中->{role_name}<-是否存在问题")
 
-        token = JF_CEMS_4_0AuthABCAPI(account, password, appID).token
+        token = JF_EXWSP_4_0AuthApi(account, password, appID).token
         return token

@@ -1,5 +1,8 @@
+/.idea/
 
+.pytest_cache/
 /static
 /report/
-/config.py
-/requirements.txt
+
+
+
