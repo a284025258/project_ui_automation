@@ -18,10 +18,10 @@ class JF_CEMS_4_0_TokenAuth(ABCTokenAuth):
         """
         获取token
         """
-        if not self.args[0]:
+        if not self.role_name:
             return ""
         # 通过配置文件中的role_name读取配置
-        role_name = self.args[0]
+        role_name = self.role_name
         try:
             account = ROLE_CONF[role_name][0]
             password = ROLE_CONF[role_name][1]

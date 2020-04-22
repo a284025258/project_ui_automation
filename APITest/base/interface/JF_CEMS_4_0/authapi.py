@@ -42,15 +42,19 @@ class JF_EXWSP_4_0AuthApi(ABCAuthAPIBase):
             "appid": self.appid,
             "password": AESUtil(self.key).encrypt(self.password)
         }}
+        logger.info(f"url-->{self.host + self.path}")
+        logger.info(f"json-->{data_to_post}")
         res = requests.post(self.host + self.path, json=data_to_post, timeout=TimeoutTime)
         return res
 
     def _send_to_EXSMS(self):
         self.path = "/api/sso/login"
         data_to_post = {"data": {
-            "userid": self.account,
-            "password": AESUtil(self.key).encrypt(self.password)
+            "userId": self.account,
+            "password": AESUtil(self.key).encrypt(self.password).upper()
         }}
+        logger.info(f"url-->{self.host + self.path}")
+        logger.info(f"json-->{data_to_post}")
         res = requests.post(self.host + self.path, json=data_to_post, timeout=TimeoutTime)
         return res
 

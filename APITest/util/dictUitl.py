@@ -23,8 +23,9 @@ def assert_dict_contain(dict1, dict2):
     """
 
     if dict1 == {} and dict2 != {}:
-        logger.info("空字典设置默认为错误")
-        assert False
+        logger.info("空字典设置默认为成功")
+        assert True
+        return
     return _dict_in(dict1, dict2)
 
 
@@ -75,4 +76,4 @@ def _dict_in(dict1, dict2):
                     logger.info(f"不存在{i}")
                     assert False
 
-            assert j == assert_obj
+            assert j == assert_obj, f"实际值为{assert_obj}"
