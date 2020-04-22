@@ -5,6 +5,8 @@ poium==0.5.3
 pycryptodome==3.9.7
 PyMySQL==0.9.3
 pytest==5.4.1
+pytest-parallel
+pytest-rerunfailures
 pytest-assume==2.2.1
 pytest-ordering==0.6
 pytest-html
