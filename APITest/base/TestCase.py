@@ -31,7 +31,7 @@ class TestCase:
                 logger.info(f"响应信息{json.dumps(res.json(), ensure_ascii=False)}")
             except JSONDecodeError as exc:
                 logger.error("响应json化失败，输出部分原始信息")
-                logger.error(res.text[:-200])
+                logger.error(res.text[:200])
                 raise exc
         with allure.step("断言响应码"):
             logger.info(f"断言响应码{self.info['status_code']}=={res.status_code}")
