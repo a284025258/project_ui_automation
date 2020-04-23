@@ -79,7 +79,7 @@ class PrepareTestData:
         """获取原始数据"""
         sql = self._conn.query(Product.product_name.label("pname"), Product.appid, Module.appid.label("mname"),
                                ApiTestCaseData.role_name, ApiTestCaseData.desc,
-                               func.concat(Module.module_path, ApiTestCaseData.apipath).label("url"),
+                               (Module.module_path + ApiTestCaseData.apipath).label("url"),
                                ApiTestCaseData.method,
                                ApiTestCaseData.req_headers, ApiTestCaseData.req_body, ApiTestCaseData.status_code,
                                ApiTestCaseData.exp_res_body, ApiTestCaseData.enable) \
@@ -91,6 +91,7 @@ class PrepareTestData:
             .filter(or_(*[ApiTestCaseData.apipath == apipath for apipath in self.apipath])) \
             .order_by(ApiTestCaseData.order.desc())
         _results = sql.all()
+        self._conn.close()
         columns = [
             'pname', 'appid', 'mname', 'role_name',
             'desc', 'url', 'method', 'req_headers',
@@ -120,7 +121,7 @@ class PrepareTestData:
 
 
 def get_session():
-    engine = create_engine(DATABASES, encoding="utf-8")
+    engine = create_engine(DATABASES)
     session_maker = sessionmaker(bind=engine)
     return session_maker()
 

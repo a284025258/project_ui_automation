@@ -32,8 +32,8 @@ Mail_Conf = {
 
 
 # 数据库配置
-DATABASES = 'mysql+pymysql://root:root@10.4.3.142:3306/test?charset=utf8'
-# DATABASES = 'sqlite:///db.sqlite3?check_same_thread=false'
+# DATABASES = 'mysql+pymysql://root:root@10.4.3.142:3306/test?charset=utf8'
+DATABASES = 'sqlite:///db.sqlite3?check_same_thread=false'
 
 # 系统配置
 API_SYS_CONF = {
