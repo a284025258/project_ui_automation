@@ -3,6 +3,6 @@
 .pytest_cache/
 /static
 /report/
-
+/db.sqlite3
 
 
