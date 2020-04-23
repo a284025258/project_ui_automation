@@ -27,11 +27,11 @@ class PrepareTestData:
 
     CaseBase = ApiTestCaseData
     ParamBase = Param
-
+    # todo 修改为orm兼顾mysql与sqlite3
     base_sql = r"""
     SELECT
     p.product_name pname,p.appid appid,m.appid mname ,t.role_name,t.`desc`,CONCAT(m.module_path,t.apipath) url,
-    t.method,t.req_headers,t.req_body,t.status_code,t.exp_res_body
+    t.method,t.req_headers,t.req_body,t.status_code,t.exp_res_body,t.`enable`
     FROM
     api_testcase_data t
     JOIN module m ON t.module_id = m.id

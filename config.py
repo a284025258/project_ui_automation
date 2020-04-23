@@ -45,5 +45,4 @@ API_SYS_CONF = {
 # 角色配置
 API_ROLE_CONF = {
     # roleName : (account,password,appID)
-    "sys_admin": ("superuser1", "Jfkj@123", "EXSMS")
-}
+    "sys_admin": ("S45", "gxeea123", "EXSMS")}
