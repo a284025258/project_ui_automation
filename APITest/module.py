@@ -1,6 +1,6 @@
 # coding: utf-8
 from sqlalchemy import Column, String, Text, text
-from sqlalchemy.dialects.mysql import INTEGER
+from sqlalchemy.dialects.mysql import INTEGER,TINYINT
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
@@ -15,6 +15,7 @@ class ApiTestCaseData(Base):
     desc = Column(String(255), server_default=text("''"), comment='用例描述')
     level = Column(String(255), server_default=text("''"), comment='用例等级')
     apipath = Column(String(255), server_default=text("''"), comment='接口地址')
+    role_name = Column(String(255), server_default=text("''"), comment='需要的权限的角色名')
     order = Column(INTEGER(11), server_default=text("'0'"), comment='用例执行顺序，越高越先执行')
     method = Column(String(255), server_default=text("'post'"), comment='请求方法')
     req_headers = Column(String(255), server_default=text("''"), comment='请求头，以json格式添加，例如{"token":${token}}')
@@ -22,7 +23,7 @@ class ApiTestCaseData(Base):
     status_code = Column(INTEGER(3), server_default=text("'200'"), comment='响应码')
     exp_res_body = Column(Text, comment='期望响应体，以json添加')
     last_excute_body = Column(Text, comment='上一次成功执行的返回值')
-
+    enable = Column(TINYINT(1), server_default=text("'1'"), comment='用例开关')
     def __str__(self):
         return "<{}: apipath={}, desc={}>".format(self.__class__.__name__, self.apipath, self.desc)
 

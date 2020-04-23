@@ -2,13 +2,12 @@ import json
 import logging
 import re
 
-from sqlalchemy import create_engine
-from sqlalchemy import text
+from sqlalchemy import create_engine, func, or_
 from sqlalchemy.orm import sessionmaker
 
 from APITest.base.TestCase import TestCase
 from APITest.config import SYS_CONF
-from APITest.module import ApiTestCaseData, Param
+from APITest.module import ApiTestCaseData, Param, Module, Product
 from config import DATABASES
 
 logger = logging.getLogger(__name__)
@@ -27,17 +26,6 @@ class PrepareTestData:
 
     CaseBase = ApiTestCaseData
     ParamBase = Param
-    # todo 修改为orm兼顾mysql与sqlite3
-    base_sql = r"""
-    SELECT
-    p.product_name pname,p.appid appid,m.appid mname ,t.role_name,t.`desc`,CONCAT(m.module_path,t.apipath) url,
-    t.method,t.req_headers,t.req_body,t.status_code,t.exp_res_body,t.`enable`
-    FROM
-    api_testcase_data t
-    JOIN module m ON t.module_id = m.id
-    JOIN product p ON m.product_id = p.id
-    WHERE 1=1
-    """
 
     def __init__(self, product_name=None, module_name=None, level=None, apipath=None):
         """
@@ -48,10 +36,10 @@ class PrepareTestData:
         :param apipath: 接口路径
         """
 
-        self.product_name = product_name
-        self.module_name = module_name
-        self.level = level
-        self.apipath = apipath
+        self.product_name = product_name or []
+        self.module_name = module_name or []
+        self.level = level or []
+        self.apipath = apipath or []
         self._conn = get_session()
         # 参数表中的参数全量读取为字典
         self._param = self.get_param()
@@ -87,30 +75,31 @@ class PrepareTestData:
             case["url"] = _prepare_url(case["appid"], case["url"])
         return [TestCase(case_info) for case_info in result]
 
-    @property
-    def execute_sql(self):
-        """
-        最终执行的sql
-        :return:
-        """
-        sql = self.base_sql
-        if self.product_name:
-            sql += "and p.product_name in ('{}')".format("','".join(self.product_name))
-        if self.module_name:
-            sql += "and m.appid in ('{}')".format("','".join(self.module_name))
-        if self.level:
-            sql += "and t.`level` in ('{}')".format("','".join(self.level))
-        if self.apipath:
-            sql += "and m.apipath in ('{}')".format("','".join(self.apipath))
-        sql += "ORDER BY t.`order` DESC"
-        return sql
-
     def _get_base_test_data(self):
         """获取原始数据"""
-        res_rows = self._conn.execute(text(self.execute_sql)).fetchall()
-        self._conn.close()
-        result = [dict(zip(result.keys(), result or "")) for result in res_rows]
-        return result
+        sql = self._conn.query(Product.product_name.label("pname"), Product.appid, Module.appid.label("mname"),
+                               ApiTestCaseData.role_name, ApiTestCaseData.desc,
+                               func.concat(Module.module_path, ApiTestCaseData.apipath).label("url"),
+                               ApiTestCaseData.method,
+                               ApiTestCaseData.req_headers, ApiTestCaseData.req_body, ApiTestCaseData.status_code,
+                               ApiTestCaseData.exp_res_body, ApiTestCaseData.enable) \
+            .join(Module, ApiTestCaseData.module_id == Module.id) \
+            .join(Product, Module.product_id == Product.id) \
+            .filter(or_(*[Product.product_name == p_name for p_name in self.product_name])) \
+            .filter(or_(*[Module.appid == m_name for m_name in self.module_name])) \
+            .filter(or_(*[ApiTestCaseData.level == level for level in self.level])) \
+            .filter(or_(*[ApiTestCaseData.apipath == apipath for apipath in self.apipath])) \
+            .order_by(ApiTestCaseData.order.desc())
+        _results = sql.all()
+        columns = [
+            'pname', 'appid', 'mname', 'role_name',
+            'desc', 'url', 'method', 'req_headers',
+            'req_body', 'status_code', 'exp_res_body', 'enable'
+        ]
+
+        results = [i or "" for i in [_result for _result in _results]]
+        dict_results = [dict(zip(columns, result)) for result in results]
+        return dict_results
 
     def _transformation(self, s):
         """
