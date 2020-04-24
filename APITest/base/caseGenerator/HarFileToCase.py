@@ -20,6 +20,7 @@ class Har2Case:
     针对post接口的json发送，解析har文件生成用例
     todo 数据库重复数据处理
     todo restful格式接口处理 eg /path/api/{id}
+    todo 重复性校验：使用url与postdata进行校验
     """
     hosts = {SYS_CONF[k]["host"]: k for k in SYS_CONF}  # { host : appid } eg {'http://10.20.5.176:9020': 'EXWSP'}
 
