@@ -15,7 +15,7 @@ def setup():
     parser.add_argument('mode', help="脚本模式,s:starttest")
     parser.add_argument('-p', '--product', dest='product', nargs='*', type=str, help='执行测试的一级模块名.')
     parser.add_argument('-m', '--module', dest='module', nargs='*', type=str, help='执行测试的模块名.')
-    parser.add_argument('-l', '--level', dest='level', nargs='*', choices=["0","1", "2", "3"], type=str,
+    parser.add_argument('-l', '--level', dest='level', nargs='*', choices=["0", "1", "2", "3"], type=str,
                         help='执行的用例等级在1 2 3中选择')
     parser.add_argument('-a', '--apipath', dest='api_path', nargs='*', type=str, help='执行的api路径,例如/path/to/api')
 
@@ -36,7 +36,7 @@ if __name__ == '__main__':
             f"--html={REPORT_HTML_FILE}", "--self-contained-html",
             "--color=no", f"--alluredir={REPORT_XML_DIR}", "--clean-alluredir",
             # "--reruns=1", "--reruns-delay=1",
-            # "--tests-per-worker", "auto",
-            # "--workers","auto"
+            # todo 待多线程与allure插件适配时候再开启
+            # "--tests-per-worker", "auto", "--workers", "auto"
         ])
         os.system(f"allure serve -h 0.0.0.0 -p 8080 {REPORT_XML_DIR}")

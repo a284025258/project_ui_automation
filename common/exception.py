@@ -1,6 +1,6 @@
-class TestAZException(BaseException):
+class TestAZException(Exception):
     """
-    错误的配置
+    异常基类
     """
 
     def __init__(self, msg=None):

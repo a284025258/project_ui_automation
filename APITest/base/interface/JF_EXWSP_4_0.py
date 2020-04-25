@@ -22,6 +22,12 @@ class JF_EXWSP_4_0AuthApi(ABCAuthAPIBase):
     token_path = "$.data.token"
 
     def __init__(self, account, password, appid):
+        """
+        根据传入appid自动寻找配置文件中对应的host
+        :param account:
+        :param password:
+        :param appid:
+        """
         self._res = None
         self.account = account
         self.password = password
@@ -36,6 +42,10 @@ class JF_EXWSP_4_0AuthApi(ABCAuthAPIBase):
             raise ValueError(f"{self.appid}不支持")
 
     def _send_to_EXWSP(self):
+        """
+        考务综合管理平台-鉴权
+        :return:
+        """
         self.path = "/sso/static/login"
         data_to_post = {"data": {
             "userid": self.account,
@@ -48,6 +58,10 @@ class JF_EXWSP_4_0AuthApi(ABCAuthAPIBase):
         return res
 
     def _send_to_EXSMS(self):
+        """
+        人员管理模块-鉴权
+        :return:
+        """
         self.path = "/api/sso/login"
         data_to_post = {"data": {
             "userId": self.account,

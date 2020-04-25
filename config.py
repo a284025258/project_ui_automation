@@ -8,7 +8,7 @@ STATIC_DIR = os.path.join(BASE_DIR, 'static')
 DRIVER_DIR = os.path.join(STATIC_DIR, 'driver')
 # 放置错误截图的路径
 IMG_DIR = os.path.join(STATIC_DIR, 'img')
-# ChromeDriver的对路径
+# ChromeDriver的路径
 DRIVER_CHROME = os.path.join(DRIVER_DIR, 'chromedriver.exe')
 # 接口测试用例路径
 APITESTCASE_HOME = os.path.join(BASE_DIR, 'APITest/testcase.py')
@@ -32,18 +32,19 @@ Mail_Conf = {
 
 
 # 数据库配置
-DATABASES = 'mysql+pymysql://root:root@10.4.3.142:3306/test?charset=utf8'
-# DATABASES = 'sqlite:///db.sqlite3?check_same_thread=false'
+# DATABASES = 'mysql+pymysql://root:root@10.4.3.142:3306/test?charset=utf8'
+DATABASES = 'sqlite:///db.sqlite3?check_same_thread=false'
 
 # 系统配置
 API_SYS_CONF = {
     # appId:{"key":sys_key,"host":ip:port}
-    "EXWSP": {"key": "85CCQWE456SXXSD6", "host": "http://10.20.5.176:9020"},
-    "EXSEM": {"key": "26955CE335EBB4D8", "host": "http://10.4.3.131/EXSEM"},
-    "EXEPM": {"key": "2182BF36BD32ACC9", "host": "http://10.4.3.131:8010/EXEPM"},
-    "EXSMS": {"key": "DBCCFDC43E99FE4A", "host": "http://10.4.3.131:8020/EXSMS/service"},
+    "EXWSP": {"key": "85CCQWE456SXXSD6", "host": "http://10.20.5.176:9020"},  # 考务综合管理平台
+    "EXSEM": {"key": "26955CE335EBB4D8", "host": "http://10.4.3.131/EXSEM"},  # 机构管理模块
+    "EXEPM": {"key": "2182BF36BD32ACC9", "host": "http://10.4.3.131:8010/EXEPM"},  # 考试计划管理系统
+    "EXSMS": {"key": "DBCCFDC43E99FE4A", "host": "http://10.4.3.131:8020/EXSMS/service"},  # 人员管理模块
 }
 # 角色配置
 API_ROLE_CONF = {
     # roleName : (account,password,appID)
-    "sys_admin": ("S45", "gxeea@123", "EXSMS")}
+    "sys_admin": ("S45", "gxeea@123", "EXSMS"),
+}

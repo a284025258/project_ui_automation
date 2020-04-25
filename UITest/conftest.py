@@ -1,3 +1,5 @@
+import os
+
 import pytest
 from selenium.webdriver import Chrome
 from selenium.webdriver import ChromeOptions
@@ -16,12 +18,7 @@ def loginPage(browser):
 @pytest.fixture(scope='session')
 def browser():
     options = ChromeOptions()
-    # options.add_argument(
-    #     'user-agent="MQQBrowser/26 Mozilla/5.0 (Linux; U; Android 2.3.7;
-    #     zh-cn; MB200 Build/GRJ22; CyanogenMod-7) AppleWebKit/533.1 (KHTML,
-    #     like Gecko) Version/4.0 Mobile Safari/533.1"')
-    # options.binary_location=DRIVER_CHROME
-    options.add_argument('--headless')
+    # options.add_argument('--headless')
     options.add_argument('--start-maximized')
     options.add_argument('--disable-gpu')  # 谷歌文档提到需要加上这个属性来规避bug
     options.add_argument('--disable-infobars')
@@ -42,3 +39,52 @@ def browser():
                                 "不存在账号"])
 def login_data(request):
     return request.param
+
+# todo 待完善
+driver = None
+
+
+#  module confest
+# 初始化用例
+@pytest.fixture(scope='module', autouse=False)
+def Sys_user_manage_page():
+    global driver
+    if driver is None:
+        driver = Sys_user_manage('Chrome')
+        driver.login('superadmin', '123456')
+    yield driver
+    print('结束用例')
+    driver.close_Browser()
+    driver = None
+
+
+# confest.py中定义截图函数
+def _fail_picture():
+    driver.fail_picture()
+
+
+# 编写钩子函数
+# 失败用例自动截图函数
+@pytest.hookimpl(tryfirst=True, hookwrapper=True)
+def pytest_runtest_makereport(item, call):
+    '''
+    hook pytest失败
+    :param item:
+    :param call:
+    :return:
+    '''
+    # execute all other hooks to obtain the report object
+    outcome = yield
+    rep = outcome.get_result()
+    # we only look at actual failing test calls, not setup/teardown
+    if rep.when == "call" and rep.failed:
+        mode = "a" if os.path.exists("failures") else "w"
+        with open("failures", mode) as f:
+            # let's also access a fixture for the fun of it
+            if "tmpdir" in item.fixturenames:
+                extra = " (%s)" % item.funcargs["tmpdir"]
+            else:
+                extra = ""
+            f.write(rep.nodeid + extra + "\n")
+        _fail_picture()  # 调用截图函数
+
