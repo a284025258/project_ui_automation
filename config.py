@@ -40,10 +40,10 @@ API_SYS_CONF = {
     # appId:{"key":sys_key,"host":ip:port}
     "EXWSP": {"key": "85CCQWE456SXXSD6", "host": "http://10.20.5.176:9020"},
     "EXSEM": {"key": "26955CE335EBB4D8", "host": "http://10.4.3.131/EXSEM"},
-    "EXEPM": {"key": "2182BF36BD32ACC9", "host": "http://10.20.5.171:9020"},
+    "EXEPM": {"key": "2182BF36BD32ACC9", "host": "http://10.4.3.131:8010/EXEPM"},
     "EXSMS": {"key": "DBCCFDC43E99FE4A", "host": "http://10.4.3.131:8020/EXSMS/service"},
 }
 # 角色配置
 API_ROLE_CONF = {
     # roleName : (account,password,appID)
-    "sys_admin": ("S45", "gxeea123", "EXSMS")}
+    "sys_admin": ("S45", "gxeea@123", "EXSMS")}

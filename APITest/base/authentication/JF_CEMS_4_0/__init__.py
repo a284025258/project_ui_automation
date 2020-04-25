@@ -1,9 +1,9 @@
 import logging
 
 from APITest.base.authentication.ABCTokenAuth import ABCTokenAuth
-from APITest.base.badconfexc import BadConfException
 from APITest.base.interface.JF_CEMS_4_0.authapi import JF_EXWSP_4_0AuthApi
 from APITest.config import ROLE_CONF
+from common.exception import BadConfException
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)

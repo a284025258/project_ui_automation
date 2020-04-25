@@ -2,13 +2,12 @@ import json
 import logging
 import re
 
-from sqlalchemy import create_engine, func, or_
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy import or_
 
 from APITest.base.TestCase import TestCase
+from APITest.util.get_session import get_session
 from APITest.config import SYS_CONF
 from APITest.module import ApiTestCaseData, Param, Module, Product
-from config import DATABASES
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -118,12 +117,6 @@ class PrepareTestData:
         result = re.subn(r"\${(.*?)}", _trans, s)
 
         return json.loads(result[0])
-
-
-def get_session():
-    engine = create_engine(DATABASES)
-    session_maker = sessionmaker(bind=engine)
-    return session_maker()
 
 
 if __name__ == '__main__':

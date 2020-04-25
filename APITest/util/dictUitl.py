@@ -74,6 +74,6 @@ def _dict_in(dict1, dict2):
                     assert_obj = assert_obj[path]
                 except (IndexError, KeyError):
                     logger.info(f"不存在{i}")
-                    assert False
+                    assert False, f"不存在{i}"
 
             assert j == assert_obj, f"实际值为{assert_obj}"
