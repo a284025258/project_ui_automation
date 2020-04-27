@@ -1,8 +1,11 @@
-import allure
+import logging
+
 from poium import PageElement
 
 from UITest.pages.BasePage import BasePage
-from UITest.pages.IndexPage import IndexPage
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 
 class HomePage(BasePage):
@@ -12,16 +15,13 @@ class HomePage(BasePage):
     sys_search_button = PageElement(describe="系统搜索框搜索按钮", css="svg.icon.yh-search-svg > use")
 
     def search_sys(self, sys_name):
-        self.logger.info("搜索名为》{}《的系统".format(sys_name))
+        logger.info("搜索名为>>>{}的系统".format(sys_name))
         self.sys_search_input_box.clear()
         self.sys_search_input_box.send_keys(sys_name)
         self.sys_search_button.click()
         return self
 
-    def into_EMS(self):
-        with allure.step("切换到EMS"):
-            self.examination_management_system.click()
-            self.logger.info("切换window handle")
-            self.switch_to_window(self.new_window_handle)
-            return IndexPage(self.driver)
-
+    def click_system(self, sys_name):
+        css = f'span[title="{sys_name}"]'
+        el = self.driver.find_element_by_css_selector(css)
+        el.click()

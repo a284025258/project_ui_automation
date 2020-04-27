@@ -1,35 +1,29 @@
-from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.select import Select
+
+from UITest.controls.BaseControl import BaseControl
 
 
-class DropDownBox:
+class DropDownBox(BaseControl):
     """
-    封装用于下拉框的API
+    单选下拉框控件,内部无多选
     """
 
-    def __init__(self, el: WebElement, desc="",switch_selector=None, is_open=False):
-        """
+    def __init__(self, el, inner_el_loc=None):
+        super().__init__(el)
+        if el.tag_name.lower() == "select":
+            self.el = Select(el)
+        if inner_el_loc is None:
+            self.inner_el_loc = self.guess_inner()
+        self.inner_el_loc = inner_el_loc
+        self.inner_els = self.el.find_elements(*self.inner_el_loc)
 
-        :param el: 页面元素
-        :param desc: 描述
-        :param switch_selector: 相对页面元素的选择器，需要反选父类可能需要用Xpath，不填则为元素本身
-        :param is_open: 初始化时下拉框状态
-        """
-        self.describe = desc
-        self.switch_selector = switch_selector
-        self._el = el
-        self._open = is_open
+    def guess_inner(self):
+        if self.el.tag_name == "ul":
+            return By.CSS_SELECTOR, "li"
+        elif self.el.tag_name == "select":
+            return By.CSS_SELECTOR, "option"
 
     @property
-    def switch(self):
-        if self.switch_selector:
-            return self._el
-        else:
-            return self._el.find_element(self.switch_selector)
-
-    def open_box(self):
-        if not self._open:
-            self.switch.click()
-
-    def close_box(self):
-        if self._open:
-            self.switch.click()
+    def text_list(self):
+        return [el.get_attribute('innerText') for el in self.inner_els]

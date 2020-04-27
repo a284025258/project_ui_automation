@@ -1,3 +1,4 @@
+import logging
 from time import sleep
 
 import allure
@@ -5,6 +6,9 @@ from poium import PageElement
 
 from UITest.pages.BasePage import BasePage
 from UITest.pages.HomePage import HomePage
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 
 class LoginPage(BasePage):
@@ -16,18 +20,19 @@ class LoginPage(BasePage):
     slider_button = PageElement(describe="滑动滑块按钮", css=".slider")
 
     def login(self, username, password):
-        self.logger.info("登录用户名：》{}《，登录密码》{}《".format(username, password))
-        with allure.step("尝试登录"):
+        logger.info("登录用户名：>>>{}，登录密码>>>{}".format(username, password))
+        with allure.step("登录"):
+            self.username.send_keys("")
             self.username.clear()
             self.username.send_keys(username)
+            self.password.send_keys("")
             self.password.clear()
             self.password.send_keys(password)
             self.verify()
             self.login_button.click()
         if self.is_login:
-            with allure.step("登录成功返回主页"):
-                self.logger.info("登录成功返回主页")
-                return HomePage(self.driver)
+            logger.info("登录成功返回主页")
+            return HomePage(self.driver)
         else:
             return self
 
@@ -36,15 +41,26 @@ class LoginPage(BasePage):
         验证码验证实现
         :return:
         """
-        self.click_and_hold(self.slider_button)
-        self.move_by_offset(220, 0)
-        self.release()
+        while not self.verified:
+            self.click_and_hold(self.slider_button)
+            self.move_by_offset(250, 0)
+            self.release()
+
+    @property
+    def verified(self) -> bool:
+        """
+        判断验证是否成功
+        @return: True -> 验证成功
+                False -> 验证未成功
+        """
+        tag = self.slider_button.text == ">"
+        return not tag
 
     @property
     def error_message(self):
-        sleep(0.5)
+        sleep(1)
         msg = self.message_box.text
-        self.logger.info("登录提示信息为》{}《".format(msg))
+        logger.info("登录提示信息为>>>{}".format(msg))
         return msg
 
     @property
@@ -53,5 +69,5 @@ class LoginPage(BasePage):
         判断是否登录成功
         :return:
         """
-        with allure.step("断言登录情况"):
-            return False if self.quit_button is None else True
+
+        return False if self.quit_button is None else True

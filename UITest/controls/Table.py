@@ -1,16 +1,10 @@
-from selenium.common.exceptions import UnexpectedTagNameException
 from selenium.webdriver.common.by import By
 
+from UITest.controls import BaseControl
 
-class Table:
+
+class Table(BaseControl):
     """获取表格类数据"""
-
-    def __init__(self, webelement):
-        if webelement.tag_name.lower() != "table":
-            raise UnexpectedTagNameException(
-                "Select only works on <table> elements, not on <%s>" %
-                webelement.tag_name)
-        self._el = webelement
 
     @property
     def row(self):

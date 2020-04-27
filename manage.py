@@ -3,7 +3,7 @@ import os
 
 import pytest
 
-from config import APITESTCASE_HOME, REPORT_XML_DIR, REPORT_HTML_DIR, REPORT_HTML_FILE, REPORT_LINK
+from config import APITESTCASE_HOME, REPORT_XML_DIR, REPORT_HTML_FILE, UITESTCASE_HOME
 
 
 def setup():
@@ -29,14 +29,19 @@ RUN_LEVEL = setup().level or []
 RUN_PATH = setup().api_path or []
 
 if __name__ == '__main__':
-
+    opts = [
+        "-q", "-vv",
+        f"--html={REPORT_HTML_FILE}", "--self-contained-html",
+        "--color=no", f"--alluredir={REPORT_XML_DIR}", "--clean-alluredir",
+        # "--reruns=1", "--reruns-delay=1",
+        # todo 待多线程与allure插件适配时候再开启
+        # "--tests-per-worker", "auto", "--workers", "auto"
+    ]
     if setup().mode in ["s", "starttest"]:
-        pytest.main([
-            APITESTCASE_HOME, "-q", "-vv",
-            f"--html={REPORT_HTML_FILE}", "--self-contained-html",
-            "--color=no", f"--alluredir={REPORT_XML_DIR}", "--clean-alluredir",
-            # "--reruns=1", "--reruns-delay=1",
-            # todo 待多线程与allure插件适配时候再开启
-            # "--tests-per-worker", "auto", "--workers", "auto"
-        ])
+        opts.insert(0, APITESTCASE_HOME)
+        pytest.main(opts)
+        os.system(f"allure serve -h 0.0.0.0 -p 8080 {REPORT_XML_DIR}")
+    elif setup().mode in ["ui", "testui"]:
+        opts.insert(0, UITESTCASE_HOME)
+        pytest.main(opts)
         os.system(f"allure serve -h 0.0.0.0 -p 8080 {REPORT_XML_DIR}")

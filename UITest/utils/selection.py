@@ -11,7 +11,7 @@ class Selection:
 
     @property
     def text_list(self):
-        return [el.text for el in self.els]
+        return [el.get_attribute('innerText') for el in self.els]
 
 
 class SelectByStr(Selection):
