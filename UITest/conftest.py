@@ -24,7 +24,7 @@ def base_page():
         # options.add_argument('--headless')
         options.add_argument('--start-maximized')
         options.add_argument('--disable-gpu')  # 谷歌文档提到需要加上这个属性来规避bug
-        options.add_argument('--disable-infobars')
+        options.add_experimental_option("excludeSwitches", ['enable-automation'])
         with Chrome(Driver_Path, chrome_options=options) as browser:
             page = BasePage(browser)
             yield page

@@ -1,7 +1,6 @@
 import logging
 from time import sleep
 
-import allure
 from poium import PageElement
 
 from UITest.pages.BasePage import BasePage
@@ -18,18 +17,18 @@ class LoginPage(BasePage):
     message_box = PageElement(describe="登录提示信息", css=".ant-message")
     quit_button = PageElement(describe="安全退出", xpath="//font[text()='安全退出']")
     slider_button = PageElement(describe="滑动滑块按钮", css=".slider")
+    test_flag = PageElement(describe="test-flag", css=".xt-flag-test")
 
     def login(self, username, password):
         logger.info("登录用户名：>>>{}，登录密码>>>{}".format(username, password))
-        with allure.step("登录"):
-            self.username.send_keys("")
-            self.username.clear()
-            self.username.send_keys(username)
-            self.password.send_keys("")
-            self.password.clear()
-            self.password.send_keys(password)
-            self.verify()
-            self.login_button.click()
+        self.username.send_keys("")
+        self.username.clear()
+        self.username.send_keys(username)
+        self.password.send_keys("")
+        self.password.clear()
+        self.password.send_keys(password)
+        self.verify()
+        self.login_button.click()
         if self.is_login:
             logger.info("登录成功返回主页")
             return HomePage(self.driver)
@@ -71,3 +70,22 @@ class LoginPage(BasePage):
         """
 
         return False if self.quit_button is None else True
+
+
+class PWDChangeBox(BasePage):
+    box = PageElement(describe="修改密码框体", css=".ant-modal-content")
+    close_button = PageElement(describe="关闭按钮", css=".ant-modal-close-x")
+    new_pwd = PageElement(describe="新密码", css="#resetpwd_form_newPwd")
+    confirm_pwd = PageElement(describe="确认密码", css="#resetpwd_form_confirmPwd")
+    commit_button = PageElement(describe="确认密码", css="button.ant-btn.ant-btn-primary")
+
+    def change_pwd(self, new_pwd, confirm_pwd=None):
+        if confirm_pwd is None:
+            confirm_pwd = new_pwd
+        self.new_pwd.send_keys(new_pwd)
+        self.confirm_pwd.send_keys(confirm_pwd)
+        self.commit_button.click()
+
+    def close(self):
+        self.close_button.click()
+        return LoginPage(self)
