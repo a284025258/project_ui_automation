@@ -6,8 +6,6 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
 # 放置driver的路径
 DRIVER_DIR = os.path.join(STATIC_DIR, 'driver')
-# 放置错误截图的路径
-IMG_DIR = os.path.join(STATIC_DIR, 'img')
 # ChromeDriver的路径
 DRIVER_CHROME = os.path.join(DRIVER_DIR, 'chromedriver.exe')
 # 接口测试用例路径

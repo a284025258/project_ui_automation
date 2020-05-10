@@ -1,8 +1,7 @@
 import logging
 import re
 
-from poium import PageElement, PageElements
-
+from UITest.common.po_base import El, Els
 from UITest.pages.BasePage import BasePage
 from UITest.pages.LoginPage import LoginPage
 from UITest.utils.selection import select_el
@@ -18,23 +17,23 @@ class IndexPage(BasePage):
         |   ----------------------------------------|                                         |
         |   |                                       |
         |   |                                       |
-        |   |           <非封装区域>                  |
+        |   |           <非封装区域>                 |
         |   |                                       |
         |   |                                       |
         |   |                                       |
         ---------------------------------------------
         """
     # 顶部
-    title = PageElement(describe="标题框", css="div.xt-title")
-    top_menu = PageElements(describe="顶部菜单栏", css="header .ant-menu-item.ant-menu-item-only-child")
-    user_info_box = PageElement(describe="用户信息框体", css=".xt-uinfo-name")
-    org_info = PageElement(describe="机构信息", xpath="/font[1]", context=user_info_box)
-    user_info = PageElement(describe="用户信息", xpath="/font[2]", context=user_info_box)
-    user_info_drop_down = PageElements(describe="下拉菜单", css=".ant-dropdown.ant-dropdown-placement-bottomCenter li")
+    title = El(describe="标题框", css="div.xt-title")
+    top_menu = Els(describe="顶部菜单栏", css="header .ant-menu-item.ant-menu-item-only-child")
+    user_info_box = El(describe="用户信息框体", css=".xt-uinfo-name")
+    org_info = El(describe="机构信息", xpath="/font[1]")
+    user_info = El(describe="用户信息", xpath="/font[2]")
+    user_info_drop_down = Els(describe="下拉菜单", css=".ant-dropdown.ant-dropdown-placement-bottomCenter li")
     # 侧边
-    aside_menu = PageElements(describe="侧边栏菜单栏", css="aside li")
+    aside_menu = Els(describe="侧边栏菜单栏", css="aside li")
     # 主页面定位
-    index_iframe = PageElement(describe="iframe定位器", css="iframe.xt-mainIframe")
+    index_iframe = El(describe="iframe定位器", css="iframe.xt-mainIframe")
 
     def _switch_in(self):
         try:
@@ -86,13 +85,13 @@ class UserInfoBox(BasePage):
     """
     个人信息   右上角点击后
     """
-    close_button = PageElement(describe="关闭按钮", css=".ant-modal-close-x")
-    base_info_box = PageElement(describe="基本信息框", css="#uinfo_form .ant-col.ant-col-14")
-    submit_button = PageElement(describe="保存按钮", css="#uinfo_form button")
+    close_button = El(describe="关闭按钮", css=".ant-modal-close-x")
+    base_info_box = El(describe="基本信息框", css="#uinfo_form .ant-col.ant-col-14")
+    submit_button = El(describe="保存按钮", css="#uinfo_form button")
     # 界面问题导致的代码问题
-    other_info_box_title = PageElement(describe="其他信息框标题", css="#uinfo_form .ant-row.xt-uinfo-header")
-    other_info_box_info = PageElement(describe="其他信息框内容", css="#uinfo_form .ant-row.xt-uinfo-text")
-    _cell = PageElements(describe="内容", context=True, css="div.ant-col")
+    other_info_box_title = El(describe="其他信息框标题", css="#uinfo_form .ant-row.xt-uinfo-header")
+    other_info_box_info = El(describe="其他信息框内容", css="#uinfo_form .ant-row.xt-uinfo-text")
+    _cell = Els(describe="内容", css="div.ant-col")
 
     @property
     def base_info(self) -> dict:
@@ -137,12 +136,12 @@ class PassWordChangeBox(BasePage):
     """
     修改密码框
     """
-    old_password_box = PageElement(describe="旧密码", id_="resetpwd_form_oldPwd")
-    new_password_box = PageElement(describe="新密码", id_="resetpwd_form_newPwd")
-    confirm_password_box = PageElement(describe="确认新密码", id_="resetpwd_form_confirmPwd")
-    change_password_submit_button = PageElement(describe="提交", xpath='//button[contains(string(),"提")]')
-    change_password_cancel_button = PageElement(describe="取消", xpath='//button[contains(string(),"消")]')
-    close_button = PageElement(describe="关闭按钮", css='button[aria-label="Close"]')
+    old_password_box = El(describe="旧密码", id="resetpwd_form_oldPwd")
+    new_password_box = El(describe="新密码", id="resetpwd_form_newPwd")
+    confirm_password_box = El(describe="确认新密码", id="resetpwd_form_confirmPwd")
+    change_password_submit_button = El(describe="提交", xpath='//button[contains(string(),"提")]')
+    change_password_cancel_button = El(describe="取消", xpath='//button[contains(string(),"消")]')
+    close_button = El(describe="关闭按钮", css='button[aria-label="Close"]')
 
     def change_password(self, old, new, confirm_password=None):
         """
