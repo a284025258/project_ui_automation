@@ -47,6 +47,18 @@ class Page:
         self.wait = WebDriverWait(self.driver, time_out)
         self._action_chains = ActionChains(self.driver)
 
+    def select(self, el):
+        if isinstance(el, tuple) and len(el) == 2:
+            el = self.find_element(*el)
+        if not el.is_selected():
+            el.click()
+
+    def deselect(self, el):
+        if isinstance(el, tuple) and len(el) == 2:
+            el = self.find_element(*el)
+        if el.is_selected():
+            el.click()
+
     @property
     def action_chains(self):
         self._action_chains.reset_actions()
@@ -114,7 +126,7 @@ class Page:
         if switch_out:
             self.driver.switch_to.default_content()
         if locator is None:
-            locator = 1
+            locator = 0
         return self.wait.until(EC.frame_to_be_available_and_switch_to_it(locator))
 
     def switch_to_new_window(self, auto_close=False):
@@ -167,7 +179,7 @@ class Page:
 
 class El:
 
-    def __init__(self, describe, time_out=0, visible=False, **locator):
+    def __init__(self, describe, time_out=0, visible=False,cache=False, **locator):
         if len(locator) != 1:
             raise ValueError("There must be one and only one locator in your init")
         self.describe = describe

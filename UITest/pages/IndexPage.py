@@ -3,7 +3,6 @@ import re
 
 from UITest.common.po_base import El, Els
 from UITest.pages.BasePage import BasePage
-from UITest.pages.LoginPage import LoginPage
 from UITest.utils.selection import select_el
 
 logger = logging.getLogger(__name__)
@@ -24,7 +23,7 @@ class IndexPage(BasePage):
         ---------------------------------------------
         """
     # 顶部
-    title = El(describe="标题框", css="div.xt-title")
+    title = El(describe="标题框", css="div.xt-title span")
     top_menu = Els(describe="顶部菜单栏", css="header .ant-menu-item.ant-menu-item-only-child")
     user_info_box = El(describe="用户信息框体", css=".xt-uinfo-name")
     org_info = El(describe="机构信息", xpath="/font[1]")
@@ -37,7 +36,7 @@ class IndexPage(BasePage):
 
     def _switch_in(self):
         try:
-            self.driver.switch_to.frame(self.index_iframe)
+            self.switch_to_frame()
         except Exception as exc:
             logger.error(exc)
             pass
@@ -56,7 +55,7 @@ class IndexPage(BasePage):
         elif by in ["修改密码", 1]:
             return PassWordChangeBox(self)
         elif by in ["安全退出", 2]:
-            return LoginPage(self)
+            return self.pm("LoginPage")(self)
 
     def select_top_menu(self, by):
         """
@@ -64,7 +63,6 @@ class IndexPage(BasePage):
         @param by:
         @return:
         """
-        self.driver.switch_to.default_content()
         el = select_el(self.top_menu, by)
         el.click()
         return self
@@ -79,6 +77,7 @@ class IndexPage(BasePage):
         menu = select_el(self.aside_menu, by)
         menu.click()
         self._switch_in()
+
 
 
 class UserInfoBox(BasePage):

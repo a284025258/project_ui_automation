@@ -12,7 +12,7 @@ page = None
 @pytest.fixture(scope='session')
 def login_page(base_page):
     login_page = LoginPage(base_page)
-    login_page.get(Start_Url)
+    login_page.driver.get(Start_Url)
     return login_page
 
 

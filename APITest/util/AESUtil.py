@@ -51,10 +51,12 @@ class AESUtil:
 
 
 if __name__ == '__main__':
-    data = '12345678'  # 待加密数据
-    key = '85CCQWE456SXXSD6'  # 16,24,32位长的密钥
+    data = 'S3WM8148'  # 待加密数据
+    # key = '85CCQWE456SXXSD6'  # 16,24,32位长的密钥
+    key = '3C15173EA1514D53977AEA6FFFC9496C'  # 16,24,32位长的密钥
     util = AESUtil(key)
     enc = util.encrypt(data)
     dec = util.decrypt(enc)
-    assert enc == '61bc76446f27e83368db5161d6030e44'
-    assert dec == data
+    # assert enc == '61bc76446f27e83368db5161d6030e44'
+    # assert dec == data
+    print(enc)

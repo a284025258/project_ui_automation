@@ -4,7 +4,7 @@
 import allure
 import pytest
 
-from UITest.pages.IndexPage import IndexPage
+from UITest.common.page_manage import pm
 
 
 @allure.feature("资源管理->人员管理")
@@ -12,7 +12,7 @@ class TestPeopleManagement:
 
     @pytest.fixture(autouse=True)
     def index(self, base_page):
-        self.page = IndexPage(base_page).select_top_menu("资源管理").select_aside_menu("人员管理")
+        self.page = pm("IndexPage")(base_page).select_top_menu("资源管理").select_aside_menu("人员管理")
 
     def test_add_people(self):
         """

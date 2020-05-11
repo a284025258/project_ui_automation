@@ -21,17 +21,13 @@ class LoginPage(BasePage):
 
     def login(self, username, password):
         logger.info("登录用户名：>>>{}，登录密码>>>{}".format(username, password))
-        self.username.send_keys("")
-        self.username.clear()
         self.username.send_keys(username)
-        self.password.send_keys("")
-        self.password.clear()
         self.password.send_keys(password)
         self.verify()
         self.login_button.click()
         if self.is_login:
             logger.info("登录成功返回主页")
-            return self.m.get_page("IndexPage")(self)
+            return self.pm("IndexPage")(self)
         else:
             return self
 
@@ -59,6 +55,7 @@ class LoginPage(BasePage):
             self.driver.find_element_by_css_selector("div.yh-login-btn > button")
         except NoSuchElementException:
             return True
+        return False
 
 
 class PWDChangeBox(BasePage):
