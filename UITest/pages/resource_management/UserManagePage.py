@@ -1,6 +1,5 @@
-from UITest.pages.BasePage import BasePage
+from UITest.pages.IndexPage import IndexPage
 
 
-class UserManagePage(BasePage):
+class UserManagePage(IndexPage):
     pass
-

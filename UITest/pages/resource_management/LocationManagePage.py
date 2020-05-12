@@ -1,5 +1,5 @@
-from UITest.pages.BasePage import BasePage
+from UITest.pages.IndexPage import IndexPage
 
 
-class LocationManagePage(BasePage):
+class LocationManagePage(IndexPage):
     pass

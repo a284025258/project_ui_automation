@@ -48,3 +48,6 @@ def import_submodules(package, recursive=True):
 
 
 pm = PageManage("UITest.pages")
+
+if __name__ == '__main__':
+    print(pm.pages)

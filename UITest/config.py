@@ -1,6 +1,6 @@
 from config import DRIVER_CHROME
 
-Start_Url = "http://10.4.3.137:8000/exwsp_web/#/login"
+Start_Url = "https://125.70.9.114:41443/"
 Driver_Path = DRIVER_CHROME
 WEB_ROLE_CONF = {
     "super_user": ("superuser5", "Jfkj@123"),

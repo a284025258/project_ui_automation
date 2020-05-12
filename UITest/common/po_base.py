@@ -1,14 +1,14 @@
-import time
-from typing import List, Dict, Optional
+from typing import List, Dict
 
 import allure
-from selenium.common.exceptions import TimeoutException
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
+
+
 
 _Locators = {
     By.ID: ["id"],
@@ -38,6 +38,12 @@ def _get_locator(_var):
 
 
 class Page:
+
+    @property
+    def pm(self):
+        from UITest.common.page_manage import pm
+        return pm
+
     def __init__(self, driver_or_page, time_out=5):
         if isinstance(driver_or_page, Page):
             driver = driver_or_page.driver
@@ -179,7 +185,7 @@ class Page:
 
 class El:
 
-    def __init__(self, describe, time_out=0, visible=False,cache=False, **locator):
+    def __init__(self, describe, time_out=0, visible=False, cache=False, **locator):
         if len(locator) != 1:
             raise ValueError("There must be one and only one locator in your init")
         self.describe = describe

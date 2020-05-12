@@ -1,8 +1,8 @@
 from UITest.common.po_base import El, Els
-from UITest.pages.BasePage import BasePage
+from UITest.pages.IndexPage import IndexPage
 
 
-class ReleaseNoticePage(BasePage):
+class ReleaseNoticePage(IndexPage):
     """
     考情综合管理-->发布通知
     """
@@ -19,7 +19,7 @@ class ReleaseNoticePage(BasePage):
         for choice in args:
             self.select(self.range[index[choice]])
 
-    def send_notice(self,title,range_,content):
+    def send_notice(self, title, range_, content):
         self.title.send_keys(title)
         self.choice_range(range_)
         self.content.send_keys(content)

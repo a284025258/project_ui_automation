@@ -1,15 +1,14 @@
 import logging
 import re
 
-from UITest.common.po_base import El, Els
-from UITest.pages.BasePage import BasePage
+from UITest.common.po_base import El, Els, Page
 from UITest.utils.selection import select_el
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 
-class IndexPage(BasePage):
+class IndexPage(Page):
     """
         对主页主要位置的封装，包括顶部菜单，用户信息，左侧菜单，个人信息框，修改密码框
         ---------------------------------------------
@@ -55,7 +54,7 @@ class IndexPage(BasePage):
         elif by in ["修改密码", 1]:
             return PassWordChangeBox(self)
         elif by in ["安全退出", 2]:
-            return self.pm("LoginPage")(self)
+            return self.pm()("LoginPage")(self)
 
     def select_top_menu(self, by):
         """
@@ -63,6 +62,7 @@ class IndexPage(BasePage):
         @param by:
         @return:
         """
+        self.driver.switch_to.default_content()
         el = select_el(self.top_menu, by)
         el.click()
         return self
@@ -77,10 +77,11 @@ class IndexPage(BasePage):
         menu = select_el(self.aside_menu, by)
         menu.click()
         self._switch_in()
+        return self
 
 
 
-class UserInfoBox(BasePage):
+class UserInfoBox(Page):
     """
     个人信息   右上角点击后
     """
@@ -131,7 +132,7 @@ class UserInfoBox(BasePage):
         return IndexPage(self)
 
 
-class PassWordChangeBox(BasePage):
+class PassWordChangeBox(Page):
     """
     修改密码框
     """

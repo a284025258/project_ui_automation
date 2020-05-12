@@ -1,8 +1,8 @@
 from UITest.common.po_base import El, Els
-from UITest.pages.BasePage import BasePage
+from UITest.pages.IndexPage import IndexPage
 
 
-class NoticeDetailPage(BasePage):
+class NoticeDetailPage(IndexPage):
     back_btn = El("返回按钮", xpath="//span[text()='返回']")
     detail_title = El("详情标题", css=".info-detail-title")
     detail_content = El("详情内容", css=".info-detail-content")
@@ -14,8 +14,8 @@ class NoticeDetailPage(BasePage):
         self.comment.send_keys(context)
         self.commit.click()
 
-    def back(self,page_name):
-        if page_name not in ["MyNoticePage","AllNoticePage"]:
+    def back(self, page_name):
+        if page_name not in ["MyNoticePage", "AllNoticePage"]:
             raise ValueError
         self.back_btn.click()
         return self.pm(page_name)(self)

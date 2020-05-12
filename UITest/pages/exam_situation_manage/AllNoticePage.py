@@ -3,14 +3,14 @@ import logging
 from selenium.webdriver.common.keys import Keys
 
 from UITest.common.po_base import El
-from UITest.controls.Table import Table
-from UITest.pages.BasePage import BasePage
+# from UITest.controls.Table import Table
+from UITest.pages.IndexPage import IndexPage
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 
-class AllNoticePage(BasePage):
+class AllNoticePage(IndexPage):
     """
     考情综合管理-->全部通知
     """
@@ -24,7 +24,8 @@ class AllNoticePage(BasePage):
 
     @property
     def table(self):
-        return Table(self.all_notice_table)
+        return
+        # return Table(self.all_notice_table)
 
     def check_detail(self, notice):
         self.find_element("xpath", "//div[title='{}']".format(notice)).click()

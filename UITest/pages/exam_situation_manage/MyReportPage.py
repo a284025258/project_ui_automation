@@ -1,6 +1,7 @@
 from UITest.common.po_base import El, Els
-from UITest.pages.BasePage import BasePage
+from UITest.pages.IndexPage import IndexPage
 
-class MyReportPage(BasePage):
+
+class MyReportPage(IndexPage):
+    El, Els
     pass
-
