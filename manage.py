@@ -40,8 +40,8 @@ if __name__ == '__main__':
     if setup().mode in ["s", "starttest"]:
         opts.insert(0, APITESTCASE_HOME)
         pytest.main(opts)
-        os.system(f"allure serve -h 0.0.0.0 -p 8080 {REPORT_XML_DIR}")
+        os.system(f"allure serve -h 127.0.0.1 -p 8080 {REPORT_XML_DIR}")
     elif setup().mode in ["ui", "testui"]:
         opts.insert(0, UITESTCASE_HOME)
         pytest.main(opts)
-        os.system(f"allure serve -h 0.0.0.0 -p 8080 {REPORT_XML_DIR}")
+        os.system(f"allure serve -h 127.0.0.1 -p 8080 {REPORT_XML_DIR}")

@@ -1,6 +1,7 @@
 from typing import List, Dict
 
 import allure
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
@@ -8,11 +9,9 @@ from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
-
-
 _Locators = {
     By.ID: ["id"],
-    By.XPATH: ["xpath", "x"],
+    By.XPATH: ["xpath", "x", "text"],
     By.LINK_TEXT: ["link_text", "lt"],
     By.PARTIAL_LINK_TEXT: ["partial_link_text", "plt"],
     By.NAME: ["name"],
@@ -34,7 +33,10 @@ Locators = get_locators(_Locators)
 
 
 def _get_locator(_var):
-    return Locators[_var[0]], _var[1]
+    by, val = _var
+    if by == "text":
+        val = "//*[contains(text(),'{}')]".format(val)
+    return Locators[by], val
 
 
 class Page:
@@ -65,6 +67,11 @@ class Page:
         if el.is_selected():
             el.click()
 
+    def click(self, by, val):
+        el = self.wait.until(EC.element_to_be_clickable((by, val)))
+        self._mark(el)
+        el.click()
+
     @property
     def action_chains(self):
         self._action_chains.reset_actions()
@@ -86,8 +93,13 @@ class Page:
         @return: WebElement
         """
         method = EC.visibility_of_element_located if visible else EC.presence_of_element_located
-        el = self.wait.until(method(locator))
-        self._mark(el)
+        el = None
+        try:
+            el = self.wait.until(method(locator))
+            self._mark(el)
+        except TimeoutException:
+            pass
+
         return el
 
     def _find_elements(self, locator, *, visible=False) -> List[WebElement]:
@@ -185,7 +197,7 @@ class Page:
 
 class El:
 
-    def __init__(self, describe, time_out=0, visible=False, cache=False, **locator):
+    def __init__(self, describe, time_out=0, visible=False, **locator):
         if len(locator) != 1:
             raise ValueError("There must be one and only one locator in your init")
         self.describe = describe

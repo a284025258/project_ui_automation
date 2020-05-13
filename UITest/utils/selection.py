@@ -20,7 +20,7 @@ class SelectByStr(Selection):
         if isinstance(by, str):
             if by in self.text_list:
                 return self.els[self.text_list.index(by)]
-            raise ValueError("not support type {}".format(type(by)))
+        raise ValueError("not support type {}".format(type(by)))
 
 
 class SelectByIndex(Selection):
@@ -32,7 +32,7 @@ class SelectByIndex(Selection):
 
 def select_el(els, by):
     if isinstance(by, str):
-        SelectByStr(els)(by)
+        return SelectByStr(els)(by)
     elif isinstance(by, int):
-        SelectByIndex(els)(by)
+        return SelectByIndex(els)(by)
     raise ValueError("not support type {}".format(type(by)))

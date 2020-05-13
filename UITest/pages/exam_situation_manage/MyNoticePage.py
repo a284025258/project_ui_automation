@@ -4,7 +4,7 @@ from UITest.pages.exam_situation_manage.AllNoticePage import AllNoticePage
 
 
 class MyNoticePage(AllNoticePage):
-    del_btn = El("删除按钮", xpath="//*span[text()='删除']")
+    del_btn = El("删除按钮", xpath="//span[text()='删除']")
     del_selector = Els("删除选择项", css="input.ant-checkbox-input")
     accept_btn = El("确认删除", css=".ant-btn")
 

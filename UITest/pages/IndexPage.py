@@ -74,11 +74,9 @@ class IndexPage(Page):
         @return:
         """
         self.driver.switch_to.default_content()
-        menu = select_el(self.aside_menu, by)
-        menu.click()
+        self.click("xpath", "//*[text()='{}']".format(by))
         self._switch_in()
         return self
-
 
 
 class UserInfoBox(Page):
