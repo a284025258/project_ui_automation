@@ -5,6 +5,7 @@ from time import sleep
 from selenium.common.exceptions import NoSuchElementException
 
 from UITest.common.po_base import El, Page
+from UITest.config import WEB_ROLE_CONF
 from UITest.utils.get_verify_code import get_verify_code
 from config import STATIC_DIR
 
@@ -16,7 +17,7 @@ class LoginPage(Page):
     username = El("用户名输入框", name="myuser")
     password = El("密码输入框", css="input[placeholder='请输入密码']")
     login_button = El("登录按钮", css="div.yh-login-btn > button")
-    message_box = El("登录提示信息", css=".ant-message",visible=True)
+    message_box = El("登录提示信息", css=".ant-message", visible=True)
     verify_box = El("验证码输入框", x="//*[@placeholder='请输入验证码']")
     verify_img = El("验证码图片", css="img")
     test_flag = El("登陆页面的测试条", css=".xt-flag-test")
@@ -31,6 +32,11 @@ class LoginPage(Page):
             return self.pm("IndexPage")(self)
         else:
             return self
+
+    def login_as_role(self, role_name):
+        """通过配置的角色名登陆"""
+        info = WEB_ROLE_CONF[role_name]
+        return self.login(*info)
 
     def verify(self):
         """
@@ -51,7 +57,6 @@ class LoginPage(Page):
 
     @property
     def error_message(self):
-        sleep(1)
         msg = self.message_box.text
         logger.info("登录提示信息为>>>{}".format(msg))
         return msg

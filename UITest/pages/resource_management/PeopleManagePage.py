@@ -1,11 +1,11 @@
-from UITest.common.po_base import El
+from UITest.common.po_base import El, Els
 from UITest.pages.IndexPage import IndexPage
 from UITest.utils.selection import select_el
 
 
 class PeopleManagePage(IndexPage):
-    org_select = El('部门选择', x='//*[@id="select"]/div[3]//li')
-    type_select = El('编制类型选择', x='//*[@id="select"]/div[4]//li')
+    org_select = Els('部门选择', x='//*[@id="select"]/div[3]//li')
+    type_select = Els('编制类型选择', x='//*[@id="select"]/div[4]//li')
 
     def select_org(self, by):
         """

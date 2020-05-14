@@ -20,14 +20,14 @@ class SelectByStr(Selection):
         if isinstance(by, str):
             if by in self.text_list:
                 return self.els[self.text_list.index(by)]
-        raise ValueError("not support type {}".format(type(by)))
+            raise ValueError(f"在 {self.text_list} 中不存在 {by}")
 
 
 class SelectByIndex(Selection):
     def __call__(self, by):
         if isinstance(by, int):
             return self.els[by]
-        raise ValueError("not support type {}".format(type(by)))
+        raise ValueError(f"在 {self.text_list} 中不存在 {by}")
 
 
 def select_el(els, by):

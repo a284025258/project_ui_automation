@@ -1,3 +1,4 @@
+from time import sleep
 from typing import List, Dict
 
 import allure
@@ -7,7 +8,10 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.wait import WebDriverWait
+
+from UITest.config import Start_Url
 
 _Locators = {
     By.ID: ["id"],
@@ -40,11 +44,7 @@ def _get_locator(_var):
 
 
 class Page:
-
-    @property
-    def pm(self):
-        from UITest.common.page_manage import pm
-        return pm
+    # todo 抽取公共类
 
     def __init__(self, driver_or_page, time_out=5):
         if isinstance(driver_or_page, Page):
@@ -54,6 +54,35 @@ class Page:
         self.driver: WebDriver = driver
         self.wait = WebDriverWait(self.driver, time_out)
         self._action_chains = ActionChains(self.driver)
+
+    @property
+    def pm(self):
+        """
+        页面管理
+        @return: pm对象
+        """
+        from UITest.common.page_manage import pm
+        return pm
+
+    @property
+    def action_chains(self) -> ActionChains:
+        """
+
+        @return:
+        """
+        self._action_chains.reset_actions()
+        return self._action_chains
+
+    def _clear_cache(self):
+        """chrome清除缓存，返回登陆界面"""
+        self.driver.get("chrome://settings/privacy")
+        # 打开清除缓存界面
+        # shadow-root 解决   https://developer.mozilla.org/zh-CN/docs/Web/API/Element/shadowRoot
+        sleep(0.5)
+        self.driver.execute_script("""document.querySelector('settings-ui').shadowRoot.querySelector('#main').shadowRoot.querySelector('settings-basic-page').shadowRoot.querySelector("#basicPage settings-section[section='privacy'] settings-privacy-page").shadowRoot.querySelector('#pages div #clearBrowsingData').click()""")
+        sleep(0.5)
+        self.driver.execute_script("""document.querySelector('settings-ui').shadowRoot.querySelector('#main').shadowRoot.querySelector('settings-basic-page').shadowRoot.querySelector("#basicPage settings-section[section='privacy'] settings-privacy-page").shadowRoot.querySelector('settings-clear-browsing-data-dialog').shadowRoot.querySelector('#clearBrowsingDataConfirm').click()""")
+        self.driver.get(Start_Url)
 
     def select(self, el):
         if isinstance(el, tuple) and len(el) == 2:
@@ -71,11 +100,6 @@ class Page:
         el = self.wait.until(EC.element_to_be_clickable((by, val)))
         self._mark(el)
         el.click()
-
-    @property
-    def action_chains(self):
-        self._action_chains.reset_actions()
-        return self._action_chains
 
     def find_element(self, by, value):
         """找到元素后会自动标记"""

@@ -33,6 +33,8 @@ class IndexPage(Page):
     # 主页面定位
     index_iframe = El(describe="iframe定位器", css="iframe.xt-mainIframe")
 
+    is_login = True
+
     def _switch_in(self):
         try:
             self.switch_to_frame()

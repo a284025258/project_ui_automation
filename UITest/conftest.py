@@ -4,6 +4,7 @@ from selenium.webdriver import Chrome
 from selenium.webdriver.chrome.options import Options
 
 from UITest.common.page_manage import pm
+from UITest.common.po_base import Page
 from UITest.config import Start_Url, Driver_Path
 
 page = None
@@ -11,11 +12,30 @@ page = None
 
 @pytest.fixture(scope="session")
 def index_page(browser):
-    browser.get(Start_Url)
+    browser.driver.get(Start_Url)
     _page = pm("LoginPage")(browser)
     with allure.step("登陆"):
         index_page = _page.login("D5101", "Sceea@123")
     yield index_page
+
+
+@pytest.fixture(scope="session")
+def login_as(browser):
+    def _login_as(role_name):
+        _page = pm("LoginPage")(browser)
+        _page._clear_cache()
+        return _page.login_as_role(role_name)
+
+    return _login_as
+
+
+@pytest.fixture(scope="session")
+def login_page(browser):
+    browser.driver.get(Start_Url)
+    _page = pm("LoginPage")(browser)
+    _page._clear_cache()
+
+    yield login_page
 
 
 @pytest.fixture(scope='session')
@@ -28,8 +48,9 @@ def browser():
         options.add_argument('--ignore-certificate-errors')  # 忽略https报错
         options.add_argument('--disable-gpu')  # 谷歌文档提到需要加上这个属性来规避bug
         options.add_experimental_option("excludeSwitches", ['enable-automation'])
-        with Chrome(Driver_Path, chrome_options=options) as browser:
-            yield browser
+        with Chrome(Driver_Path, options=options) as browser:
+            page = Page(browser)
+            yield page
 
 
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)

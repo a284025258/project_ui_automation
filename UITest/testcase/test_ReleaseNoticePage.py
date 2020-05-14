@@ -7,19 +7,20 @@ from UITest.common.page_manage import pm
 
 @pytest.fixture()
 def switch_to_notice_page(index_page):
+    """切换至发布通知界面"""
     index_page.driver.refresh()
 
     with allure.step("切换至发布通知界面"):
-
-        page = index_page.select_top_menu("考情综合管理")\
+        page = index_page.select_top_menu("考情综合管理") \
             .select_aside_menu("通知公告") \
-            .select_aside_menu("通知管理")\
+            .select_aside_menu("通知管理") \
             .select_aside_menu("发布通知")
         release_notice_page = pm("ReleaseNoticePage")(page)
 
     yield release_notice_page
 
 
+@allure.severity(allure.severity_level.NORMAL)
 @allure.feature("考情综合管理->通知公告->通知管理->发布通知")
 class TestReleaseNoticePage:
 
