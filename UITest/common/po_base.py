@@ -1,46 +1,21 @@
+"""
+@author Ymangz
+
+"""
 from time import sleep
-from typing import List, Dict
+from typing import List
 
 import allure
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver import ActionChains
-from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.wait import WebDriverWait
 
+from UITest.common import page_actions
+from UITest.common.locator import get_locator
 from UITest.config import Start_Url
-
-_Locators = {
-    By.ID: ["id"],
-    By.XPATH: ["xpath", "x", "text"],
-    By.LINK_TEXT: ["link_text", "lt"],
-    By.PARTIAL_LINK_TEXT: ["partial_link_text", "plt"],
-    By.NAME: ["name"],
-    By.TAG_NAME: ["tag_name", "tag"],
-    By.CLASS_NAME: ["class_name", "class"],
-    By.CSS_SELECTOR: ["css_selector", "css"],
-}
-
-
-def get_locators(_) -> Dict[str, str]:
-    result = {}
-    for key, values in _.items():
-        for value in values:
-            result[value] = key
-    return result
-
-
-Locators = get_locators(_Locators)
-
-
-def _get_locator(_var):
-    by, val = _var
-    if by == "text":
-        val = "//*[contains(text(),'{}')]".format(val)
-    return Locators[by], val
 
 
 class Page:
@@ -54,6 +29,9 @@ class Page:
         self.driver: WebDriver = driver
         self.wait = WebDriverWait(self.driver, time_out)
         self._action_chains = ActionChains(self.driver)
+
+    def click(self, force=False, **locator):
+        return page_actions.click(self.driver, force, **locator)
 
     @property
     def pm(self):
@@ -79,9 +57,11 @@ class Page:
         # 打开清除缓存界面
         # shadow-root 解决   https://developer.mozilla.org/zh-CN/docs/Web/API/Element/shadowRoot
         sleep(0.5)
-        self.driver.execute_script("""document.querySelector('settings-ui').shadowRoot.querySelector('#main').shadowRoot.querySelector('settings-basic-page').shadowRoot.querySelector("#basicPage settings-section[section='privacy'] settings-privacy-page").shadowRoot.querySelector('#pages div #clearBrowsingData').click()""")
+        self.driver.execute_script(
+            """document.querySelector('settings-ui').shadowRoot.querySelector('#main').shadowRoot.querySelector('settings-basic-page').shadowRoot.querySelector("#basicPage settings-section[section='privacy'] settings-privacy-page").shadowRoot.querySelector('#pages div #clearBrowsingData').click()""")
         sleep(0.5)
-        self.driver.execute_script("""document.querySelector('settings-ui').shadowRoot.querySelector('#main').shadowRoot.querySelector('settings-basic-page').shadowRoot.querySelector("#basicPage settings-section[section='privacy'] settings-privacy-page").shadowRoot.querySelector('settings-clear-browsing-data-dialog').shadowRoot.querySelector('#clearBrowsingDataConfirm').click()""")
+        self.driver.execute_script(
+            """document.querySelector('settings-ui').shadowRoot.querySelector('#main').shadowRoot.querySelector('settings-basic-page').shadowRoot.querySelector("#basicPage settings-section[section='privacy'] settings-privacy-page").shadowRoot.querySelector('settings-clear-browsing-data-dialog').shadowRoot.querySelector('#clearBrowsingDataConfirm').click()""")
         self.driver.get(Start_Url)
 
     def select(self, el):
@@ -95,11 +75,6 @@ class Page:
             el = self.find_element(*el)
         if el.is_selected():
             el.click()
-
-    def click(self, by, val):
-        el = self.wait.until(EC.element_to_be_clickable((by, val)))
-        self._mark(el)
-        el.click()
 
     def find_element(self, by, value):
         """找到元素后会自动标记"""
@@ -226,7 +201,7 @@ class El:
             raise ValueError("There must be one and only one locator in your init")
         self.describe = describe
         self._time_out = time_out
-        self.locator = _get_locator(locator.popitem())
+        self.locator = get_locator(locator.popitem())
         self._visible = visible
 
     @property
@@ -261,8 +236,4 @@ class Els(El):
 
 
 if __name__ == '__main__':
-    def xixi(*, haha=""):
-        print(haha)
-
-
-    xixi(haha="lskahjflskj")
+    pass

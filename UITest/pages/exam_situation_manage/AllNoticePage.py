@@ -28,5 +28,5 @@ class AllNoticePage(IndexPage):
         # return Table(self.all_notice_table)
 
     def check_detail(self, notice):
-        self.find_element("xpath", "//div[@title='{}']".format(notice)).click()
+        self.click(x=f"//div[@title='{notice}']")
         return self.pm("NoticeDetailPage")(self)

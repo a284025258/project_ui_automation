@@ -76,7 +76,7 @@ class IndexPage(Page):
         @return:
         """
         self.driver.switch_to.default_content()
-        self.click("xpath", "//*[text()='{}']".format(by))
+        self.click(x=f"//*[text()='{by}']")
         self._switch_in()
         return self
 

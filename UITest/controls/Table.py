@@ -1,9 +1,9 @@
 from selenium.webdriver.common.by import By
 
-from UITest.controls import BaseControl
+from UITest.common import page_control
 
 
-class Table(BaseControl):
+class Table(page_control):
     """获取表格类数据"""
 
     @property

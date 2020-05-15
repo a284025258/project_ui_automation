@@ -1,4 +1,4 @@
-from UITest.controls.BaseControl import BaseControl
+from UITest.common.page_control import BaseControl
 
 
 class PageHelper(BaseControl):

@@ -17,3 +17,4 @@ yagmail~=0.11.224
 sqlacodegen
 pytesseract~=0.3.4
 opencv-python~=4.2.0.34
+Faker~=4.0.3
