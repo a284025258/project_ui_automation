@@ -23,10 +23,10 @@ def __get_locators(_):
 Locators = __get_locators(_Locators)
 
 
-def get_locator(_var):
+def get_locator(locator: dict):
     """
     获取locator
-    @param _var:
+    @param locator:
     @return:
 
     Usage:
@@ -35,7 +35,9 @@ def get_locator(_var):
     get_locator(("text", "value")) == (By.XPATH,"//*[text()='value']")
 
     """
-    by, val = _var
+    if not isinstance(locator, dict) or len(locator) != 1:
+        raise ValueError("bad usage")
+    by, val = locator.popitem()
     if by == "text_c":
         val = f"//*[contains(text(),'{val}')]"
     elif by == "text":
@@ -47,5 +49,5 @@ if __name__ == '__main__':
     print(Locators.items())
     print(get_locator(("text", "locator")))
     print(get_locator(("css", "locator")))
-    assert get_locator(("x", "//a")) == (By.XPATH,"//a")
-    assert get_locator(("text", "value")) == (By.XPATH,"//*[text()='value']")
+    assert get_locator(("x", "//a")) == (By.XPATH, "//a")
+    assert get_locator(("text", "value")) == (By.XPATH, "//*[text()='value']")

@@ -3,35 +3,27 @@
 
 """
 from time import sleep
-from typing import List
 
 import allure
-from selenium.common.exceptions import TimeoutException
-from selenium.webdriver import ActionChains
 from selenium.webdriver.remote.webdriver import WebDriver
-from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.wait import WebDriverWait
 
-from UITest.common import page_actions
-from UITest.common.locator import get_locator
+from UITest.common.page_action import PageAction
 from UITest.config import Start_Url
 
 
 class Page:
-    # todo 抽取公共类
 
-    def __init__(self, driver_or_page, time_out=5):
+    def __init__(self, driver_or_page):
         if isinstance(driver_or_page, Page):
             driver = driver_or_page.driver
         else:
             driver = driver_or_page
+        self.action = PageAction(driver)
         self.driver: WebDriver = driver
-        self.wait = WebDriverWait(self.driver, time_out)
-        self._action_chains = ActionChains(self.driver)
 
-    def click(self, force=False, **locator):
-        return page_actions.click(self.driver, force, **locator)
+    def click(self, *, el=None, force=False, **locator):
+        return self.action.click(el=el, force=force, **locator)
 
     @property
     def pm(self):
@@ -41,15 +33,6 @@ class Page:
         """
         from UITest.common.page_manage import pm
         return pm
-
-    @property
-    def action_chains(self) -> ActionChains:
-        """
-
-        @return:
-        """
-        self._action_chains.reset_actions()
-        return self._action_chains
 
     def _clear_cache(self):
         """chrome清除缓存，返回登陆界面"""
@@ -64,75 +47,27 @@ class Page:
             """document.querySelector('settings-ui').shadowRoot.querySelector('#main').shadowRoot.querySelector('settings-basic-page').shadowRoot.querySelector("#basicPage settings-section[section='privacy'] settings-privacy-page").shadowRoot.querySelector('settings-clear-browsing-data-dialog').shadowRoot.querySelector('#clearBrowsingDataConfirm').click()""")
         self.driver.get(Start_Url)
 
-    def select(self, el):
-        if isinstance(el, tuple) and len(el) == 2:
-            el = self.find_element(*el)
-        if not el.is_selected():
-            el.click()
-
-    def deselect(self, el):
-        if isinstance(el, tuple) and len(el) == 2:
-            el = self.find_element(*el)
-        if el.is_selected():
-            el.click()
-
-    def find_element(self, by, value):
+    def find_element(self, *, mode="L", **locator):
         """找到元素后会自动标记"""
-        return self._find_element((by, value))
+        return self.action.find_element(mode=mode, **locator)
 
-    def find_elements(self, by, value):
+    def find_elements(self, *, mode="L", **locator):
         """强化版查询元素，附加等待与元素标记"""
-        return self._find_elements((by, value))
+        return self.action.find_elements(mode=mode, **locator)
 
-    def _find_element(self, locator, *, visible=False) -> WebElement:
-        """
-        查询元素,超时后会返回None
-        @param locator: 定位器
-        @param visible: 元素可见
-        @return: WebElement
-        """
-        method = EC.visibility_of_element_located if visible else EC.presence_of_element_located
-        el = None
-        try:
-            el = self.wait.until(method(locator))
-            self._mark(el)
-        except TimeoutException:
-            pass
-
-        return el
-
-    def _find_elements(self, locator, *, visible=False) -> List[WebElement]:
-        """
-        查询一组元素
-        @param locator: 定位器
-        @param visible: 元素可见
-        :return: List[WebElement]
-        """
-
-        els: List[WebElement] = self.wait.until(EC.presence_of_all_elements_located(locator))
-        if visible:
-            els = [el.is_displayed() for el in els]
-        for el in els:
-            self._mark(el)
-        return els
-
-    def _mark(self, el):
+    def _mark(self, *el):
         """
         标记元素
         @param el: 被标记的元素
         """
-        mark_js = 'arguments[0].style.border="2px solid red"'
-        try:
-            self.driver.execute_script(mark_js, el)
-        except Exception:
-            pass
+        self.action.mark(*el)
 
-    def hover(self, hover_el):
+    def hover(self, hover_el=None, **locator):
         """
         悬停
         @param hover_el: 被悬停的元素,元素需要可见
         """
-        self.action_chains.move_to_element(hover_el).perform()
+        return self.action.hover(el=hover_el, **locator)
 
     def switch_to_frame(self, locator=None, switch_out=True):
         """
@@ -144,7 +79,7 @@ class Page:
             self.driver.switch_to.default_content()
         if locator is None:
             locator = 0
-        return self.wait.until(EC.frame_to_be_available_and_switch_to_it(locator))
+        return self.action.wait.until(EC.frame_to_be_available_and_switch_to_it(locator))
 
     def switch_to_new_window(self, auto_close=False):
         """
@@ -161,27 +96,12 @@ class Page:
         @param accept: 若为真则接受，若为假则取消
         @param keys_to_send: 若存在则输入后确认
         """
-        alert = self.wait.until(EC.alert_is_present())
+        alert = self.action.wait.until(EC.alert_is_present())
         if keys_to_send is not None:
             alert.send_keys(keys_to_send)
             alert.accept()
         else:
             alert.accept() if accept else alert.dismiss()
-
-    def scroll(self, x=0, y=0, *, el=None):
-        """
-        滚动屏幕
-        @param x:
-        @param y:
-        @param el:
-        @return:
-        """
-        if el is None:
-            scroll_js = f"window.scrollBy({x},{y})"
-            self.driver.execute_script(scroll_js)
-        else:
-            scroll_js = f"arguments[0].scrollBy({x},{y})"
-            self.driver.execute_script(scroll_js, el)
 
     def screenshot_in_allure(self, step_name="运行快照"):
         """
@@ -196,43 +116,34 @@ class Page:
 
 class El:
 
-    def __init__(self, describe, time_out=0, visible=False, **locator):
-        if len(locator) != 1:
-            raise ValueError("There must be one and only one locator in your init")
+    def __init__(self, describe, time_out=0, mode="L", **locator):
         self.describe = describe
         self._time_out = time_out
-        self.locator = get_locator(locator.popitem())
-        self._visible = visible
-
-    @property
-    def method(self):
-        return EC.visibility_of_element_located if self._visible else EC.presence_of_element_located
-
-    def find_el(self, instance, owner) -> WebElement:
-        if self._time_out:
-            el = WebDriverWait(instance.driver, self._time_out).until(self.method(self.locator))
-        else:
-            el = instance.find_element(*self.locator)
-        return el
+        self.mode = mode
+        self.locator = locator
 
     def __get__(self, instance, owner):
         if not isinstance(instance, Page):
             raise ValueError("need use in a Page-like Object")
-        return self.find_el(instance, owner)
+        if self._time_out:
+            with instance.action.SetPageActionTime(instance.action, self._time_out) as action:
+                el = action.find_element(mode=self.mode, **self.locator)
+            return el
+        el = instance.action.find_element(mode=self.mode, **self.locator)
+        return el
 
 
 class Els(El):
 
-    def find_el(self, instance, owner) -> List[WebElement]:
+    def __get__(self, instance, owner):
+        if not isinstance(instance, Page):
+            raise ValueError("need use in a Page-like Object")
         if self._time_out:
-            els = WebDriverWait(instance.driver, self._time_out).until(self.method(self.locator))
-        else:
-            els = instance.find_elements(*self.locator)
+            with instance.action.SetPageActionTime(instance.action, self._time_out) as action:
+                els = action.find_elements(mode=self.mode, **self.locator)
+            return els
+        els = instance.action.find_elements(mode=self.mode, **self.locator)
         return els
-
-    @property
-    def method(self):
-        return EC.visibility_of_all_elements_located if self._visible else EC.presence_of_all_elements_located
 
 
 if __name__ == '__main__':

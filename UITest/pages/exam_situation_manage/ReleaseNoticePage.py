@@ -21,7 +21,7 @@ class ReleaseNoticePage(IndexPage):
         index = {"全部": 0, "市级": 1,
                  "区县级": 2, "考点级": 3, }
         for choice in args:
-            self.select(self.range[index[choice]])
+            self.range[index[choice]].click()
 
     def send_notice(self, title, range_, content):
         self.title.send_keys(title)
