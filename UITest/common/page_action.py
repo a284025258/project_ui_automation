@@ -1,3 +1,5 @@
+from time import sleep
+
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver import ActionChains
 from selenium.webdriver.remote.webelement import WebElement
@@ -7,6 +9,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from UITest.common.locator import get_locator
 
 DefaultTimeOut = 5
+step_time = 0.2
 
 
 # iframe url
@@ -24,7 +27,7 @@ class PageAction:
         """
         self.carrier = carrier
         self.wait = WebDriverWait(carrier, DefaultTimeOut)
-        self._actions = ActionChains(carrier)
+        self._actions = ActionChains(carrier.parent) if isinstance(carrier, WebElement) else ActionChains(carrier)
         self.is_el = isinstance(carrier, WebElement)
         self.executor = self.carrier.parent.execute_script if self.is_el else self.carrier.execute_script
 
@@ -60,7 +63,7 @@ class PageAction:
             click_js = "arguments[0].click()"
             self.executor(click_js, _el)
         else:
-            self.wait.until(lambda _: _el.is_enabled())
+            self.wait.until(lambda _: _el if _el.is_enabled() and _el.is_displayed() else False)
             _el.click()
 
     def find_element(self, *, mode="L", **locator):
@@ -74,14 +77,18 @@ class PageAction:
         :exception TimeOutException
         :return: marked WebElement
         """
+        if step_time:
+            sleep(step_time)
         methods = {
             "L": EC.presence_of_element_located,
             "V": EC.visibility_of_element_located,
             "I": EC.element_to_be_clickable,
         }
         method = methods[mode]
-        locator = get_locator(locator)
-        el = self.wait.until(method(locator))
+        _locator = get_locator(locator)
+        el = self.wait.until(method(_locator))
+        if EC.staleness_of(el)(None):
+            el = self.find_element(mode=mode, **locator)
         self.mark(el)
         return el
 
@@ -96,6 +103,8 @@ class PageAction:
         :exception TimeOutException
         :return: marked WebElement
         """
+        if step_time:
+            sleep(step_time)
         # 自建类返回可交互的元素
         interactive_of_any_elements_located = type("interactive_of_any_elements_located", (object,), {
             "__init__":

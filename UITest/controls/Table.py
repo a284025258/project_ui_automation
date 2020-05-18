@@ -1,10 +1,17 @@
 from selenium.webdriver.common.by import By
 
-from UITest.common import page_control
+from UITest.common.page_control import BaseControl
 
 
-class Table(page_control):
+class Table(BaseControl):
     """获取表格类数据"""
+
+    def get_row(self, info):
+        for data in self.data:
+            if info in data:
+                return data
+        else:
+            return None
 
     @property
     def row(self):
@@ -29,7 +36,15 @@ class Table(page_control):
         return [th.text for th in self._th]
 
     @property
-    def data(self):
+    def info(self):
+        """
+        返回表信息
+        @return: {"title1":["info1","info2"],"title2":["info3","info4"]}
+        """
+        return dict(zip(self.titles, self.T_data))
+
+    @property
+    def row_data(self):
         """Table data"""
         ret = []
         for row in self._tr:
@@ -37,12 +52,28 @@ class Table(page_control):
             ret.append(tds)
         return ret
 
+    @property
+    def data(self):
+        """
+        返回表信息
+        @return: [["info1","info2"],
+                ["info3","info4"]]
+        """
+        ret = []
+        for row in self._tr:
+            tds = row.find_elements(By.TAG_NAME, 'td')
+            ret.append([td.text for td in tds])
+        return ret
+
+    @property
+    def T_data(self):
+        return list(zip(*self.data))
+
     def __getitem__(self, item):
         if isinstance(item, int):
             return self.data[item]
         elif isinstance(item, str):
-            index = self.titles.index(item)
-            return [i[index] for i in self.data]
+            return self.info[item]
         else:
             raise TypeError("{0} indices must be integers or str not {1}"
                             .format(type(self), type(item)))

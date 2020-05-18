@@ -3,9 +3,11 @@
 
 """
 from time import sleep
+from typing import List
 
 import allure
 from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 
 from UITest.common.page_action import PageAction
@@ -22,7 +24,7 @@ class Page:
         self.action = PageAction(driver)
         self.driver: WebDriver = driver
 
-    def click(self, *, el=None, force=False, **locator):
+    def click(self, el=None, *, force=False, **locator):
         return self.action.click(el=el, force=force, **locator)
 
     @property
@@ -122,7 +124,7 @@ class El:
         self.mode = mode
         self.locator = locator
 
-    def __get__(self, instance, owner):
+    def __get__(self, instance, owner) -> WebElement:
         if not isinstance(instance, Page):
             raise ValueError("need use in a Page-like Object")
         if self._time_out:
@@ -135,7 +137,7 @@ class El:
 
 class Els(El):
 
-    def __get__(self, instance, owner):
+    def __get__(self, instance, owner) -> List[WebElement]:
         if not isinstance(instance, Page):
             raise ValueError("need use in a Page-like Object")
         if self._time_out:

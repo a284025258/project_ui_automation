@@ -30,7 +30,7 @@ RUN_PATH = setup().api_path or []
 
 if __name__ == '__main__':
     opts = [
-        "-q", "-vv",
+        "-q", "-vv", "-s",
         f"--html={REPORT_HTML_FILE}", "--self-contained-html",
         "--color=no", f"--alluredir={REPORT_XML_DIR}", "--clean-alluredir",
         # "--reruns=1", "--reruns-delay=1",

@@ -15,7 +15,7 @@ class ReleaseNoticePage(IndexPage):
     content = El("通知内容", css=".w-e-text")
     commit = El("发送", css="button.ant-btn.ant-btn-primary")
     dismiss = El("取消", css=".iconfont.icon-quxiao")
-    recommit = El("确认发送", x="//*[text()='确 定']/..",visible=True)
+    recommit = El("确认发送", x="//*[text()='确 定']/..",mode="I")
 
     def choice_range(self, *args):
         index = {"全部": 0, "市级": 1,

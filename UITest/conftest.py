@@ -5,37 +5,20 @@ from selenium.webdriver.chrome.options import Options
 
 from UITest.common.page_manage import pm
 from UITest.common.po_base import Page
-from UITest.config import Start_Url, Driver_Path
+from UITest.config import Driver_Path
 
 page = None
 
 
 @pytest.fixture(scope="session")
-def index_page(browser):
-    browser.driver.get(Start_Url)
-    _page = pm("LoginPage")(browser)
-    with allure.step("登陆"):
-        index_page = _page.login("D5101", "Sceea@123")
-    yield index_page
-
-
-@pytest.fixture(scope="session")
 def login_as(browser):
     def _login_as(role_name):
-        _page = pm("LoginPage")(browser)
-        _page._clear_cache()
-        return _page.login_as_role(role_name)
+        with allure.step("登陆"):
+            _page = pm("LoginPage")(browser)
+            _page._clear_cache()
+            return _page.login_as_role(role_name)
 
     return _login_as
-
-
-@pytest.fixture(scope="session")
-def login_page(browser):
-    browser.driver.get(Start_Url)
-    _page = pm("LoginPage")(browser)
-    _page._clear_cache()
-
-    yield login_page
 
 
 @pytest.fixture(scope='session')

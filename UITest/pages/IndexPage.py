@@ -84,6 +84,7 @@ class IndexPage(Page):
 class UserInfoBox(Page):
     """
     个人信息   右上角点击后
+    # fixme 2020年5月30日
     """
     close_button = El(describe="关闭按钮", css=".ant-modal-close-x")
     base_info_box = El(describe="基本信息框", css="#uinfo_form .ant-col.ant-col-14")
