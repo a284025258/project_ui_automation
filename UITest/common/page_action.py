@@ -111,7 +111,7 @@ class PageAction:
                 lambda self_, locator_: setattr(self_, "locator", locator_),
             "__call__":
                 lambda self_, driver:
-                [el_ for el_ in driver.find_elements(*self_.locator) if el_.is_enable()]
+                [el_ for el_ in driver.find_elements(*self_.locator) if el_.is_enable() and el_.is_displayed()]
         })
 
         methods = {

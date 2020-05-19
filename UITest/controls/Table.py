@@ -1,3 +1,5 @@
+from time import sleep
+
 from selenium.webdriver.common.by import By
 
 from UITest.common.page_control import BaseControl
@@ -7,6 +9,7 @@ class Table(BaseControl):
     """获取表格类数据"""
 
     def get_row(self, info):
+        sleep(1)
         for data in self.data:
             if info in data:
                 return data

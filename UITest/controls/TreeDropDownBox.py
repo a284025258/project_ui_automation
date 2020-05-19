@@ -16,6 +16,6 @@ class TreeDropDownBox(DropDownBox):
     def open(self, org_name):
         """展开机构树的下拉框"""
         self.open_check()
-        val = f'//a[contains(@title,"{org_name}") and @class]/preceding-sibling::span'
+        val = f'.//a[contains(@title,"{org_name}") and @class]/preceding-sibling::span'
         self.action.click(x=val)
         return self

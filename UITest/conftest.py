@@ -17,7 +17,6 @@ def login_as(browser):
             _page = pm("LoginPage")(browser)
             _page._clear_cache()
             return _page.login_as_role(role_name)
-
     return _login_as
 
 

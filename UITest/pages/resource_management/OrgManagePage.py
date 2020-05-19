@@ -1,4 +1,5 @@
 import logging
+import re
 from time import sleep
 
 import allure
@@ -12,6 +13,8 @@ from UITest.utils.selection import select_el
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
+
+school_org_list = ["小学", "初中", "高中", "完中（初中高中）", "中职", "大学", "其他"]
 
 
 class OrgManagePage(IndexPage):
@@ -94,12 +97,20 @@ class DepartmentInfoMaintainPage(OrgManagePage):
     add_department_btn = El("新增部门按钮", css="#btnAddDepartment")
     info_table = El("信息表", css="#divTemplate table")
 
+    def del_department(self, d_name):
+        with allure.step(f"删除{d_name}部门"):
+            val = f'//*[text()="{d_name}"]/parent::tr//*[text()="删 除"]'
+            self.click(x=val)
+            self.click(x='//a[text()="删除"]')
+        return self
+
     def click_add_department_btn(self):
         with allure.step("点击新增部门按钮"):
             self.click(el=self.add_department_btn)
         return self.NewDepartment(self)
 
     def get_tr(self, info):
+        sleep(0.5)
         return Table(self.info_table).get_row(info)
 
     @property
@@ -108,7 +119,7 @@ class DepartmentInfoMaintainPage(OrgManagePage):
         return Table(self.info_table).info
 
     class NewDepartment(Page):
-        department_name = El("部门名称", css="#Name")
+        department_name = El("部门名称", mode="I", css="#Name")
         department_type = El("部门类型下拉框", css=".dropdown-menu.open")
         department_type_opener = El("部门类型下拉框激活", css="button[data-id]")
         exam_projects = Els("分管考试项目", css="#dv_EtId label")
@@ -124,12 +135,12 @@ class DepartmentInfoMaintainPage(OrgManagePage):
             @param exam_projects: 部门分管考试项目
             @return:
             """
+            self.switch_to_frame(locator="main-body", switch_out=False)
             with allure.step("添加部门"):
-                self.switch_to_frame(locator="main-body", switch_out=False)
+                self.click(self.department_name)
                 self.department_name.send_keys(department_name)
 
                 DropDownBox(self.department_type, self.department_type_opener).select(department_type)
-
                 if exam_projects:
                     for exam_project in exam_projects:
                         el = select_el(self.exam_projects, exam_project)
@@ -151,17 +162,76 @@ class SubOrgManagePage(OrgManagePage):
     # 搜索框
     query_org_drop_box = El("管理机构下拉列表", css="#orgtree_value_layer")
     query_org_drop_box_opener = El("管理机构下拉列表激活框", css="#orgtree_name")
+
     query_org_type_drop_box = El("机构类型下拉列表", css="#orgtypetree_value_layer")
     query_org_type_drop_box_opener = El("机构类型下拉列表", css="#orgtypetree_name")
+
     query_org_btn = El("查询按钮", css="#btnQuery")
     search_org_name_input = El("机构名称搜索输入框", css="#orgSearch")
     search_org_name_btn = El("机构名称搜索按钮", css="#btnSearch")
     # 内容
-    info_table = El("机构管理表", css="#tborg")
+    info_table = El("机构管理表", css="#divOrgContent")
     # 新增机构
     add_org_btn = El("新增机构按钮", id="btnAddOrg")
 
+    def click_add_org_btn(self):
+        self.add_org_btn.click()
+        return SubOrgManagePage.NewOrgPage(self)
 
+    @property
+    def org_name_compliance(self):
+        """
+        判断机构名称是否合规，通过机构名称前的标号进行判断
+        @return:
+        """
+        i = self.table.info
+        s_org_names = self.table.info["机构名称"]
+        org_nums = list(map(lambda s: re.findall(r"\d+", s)[0], s_org_names))
+        org_num = re.findall(r"\d+", self.org_name)[0]
+        for item in org_nums:
+            if not item.startswith(org_num):
+                return False
+        else:
+            return True
+
+    @property
+    def org_type_compliance(self):
+        """判断机构类型是否合规"""
+        if self.org_type == "全部":
+            # 若选择为全部，则直接返回True
+            return True
+        org_types = self.table.info["机构类型"]
+        if len(org_types) == 0:
+            # 判断没有搜索到，则直接返回True
+            return True
+        if self.org_type == "学校":
+            # 搜索为学校，判断表中类型是否为c_list中的值
+
+            for org_type in org_types:
+                if org_type not in school_org_list:
+                    return False
+            else:
+                return True
+        else:
+            # 搜索为固定
+            if len(set(org_types)) != 1:
+                # 不止一种返回False
+                return False
+            return self.org_type == org_types[0]
+
+    @property
+    def table(self):
+        return Table(self.info_table)
+
+    @property
+    def org_type(self):
+        """机构类型"""
+        return TreeDropDownBox(self.query_org_type_drop_box, self.query_org_type_drop_box_opener).value
+
+    @property
+    def org_name(self):
+        """机构名称"""
+        return TreeDropDownBox(self.query_org_drop_box, self.query_org_drop_box_opener).value
 
     def select_org(self, *org_names):
         tag = True
@@ -184,7 +254,7 @@ class SubOrgManagePage(OrgManagePage):
         @param org_name: 机构名称
         @return:
         """
-        tree = TreeDropDownBox(self.query_org_drop_box, self.query_org_type_drop_box_opener)
+        tree = TreeDropDownBox(self.query_org_drop_box, self.query_org_drop_box_opener)
         tree.open(org_name) if _open else tree.select(org_name)
         return self
 
@@ -207,15 +277,54 @@ class SubOrgManagePage(OrgManagePage):
         self.search_org_name_btn.click()
         return self
 
-    def get_table_info(self):
-        """获取表信息"""
-        return Table(self.info_table).info
-
     class NewOrgPage(Page):
-        """新增机构"""
+        """新增机构弹出界面"""
+        frame_el = El("弹出框定位", css="#main-body")
 
         org_type_select = El("机构类型选择", x='//*[@data-id="OrgType"]/following::div[1]')
         org_type_select_opener = El("机构类型选择激活器", css='[data-id="OrgType"]')
+
+        school_type_select = El("学校类型选择", x='//*[@data-id="SchoolType"]/following::div[1]')
+        school_type_opener = El("学校类型选择激活器", css='[data-id="SchoolType"]')
+
+        org_code_input = El("机构代码输入框", css="#OrgDisplayCode")
+        org_name_input = El("机构名称输入框", css="#OrgName")
+        org_alias_input = El("机构简称输入框", css="#OrgAlias")
+        org_area_input = El("考区名称", mode="V", css="#GLKQMC")
+
+        submit_btn = El("保存按钮", css='[type="submit"]')
+        confirm_btn = El("确认按钮", x='//*[text()="确定"]')
+
+        _org_account = El("机构账号", css="#label_account")
+
+        @property
+        def org_account(self):
+            return self._org_account.text
+
+        def add_org_school(self, school_type, org_num, org_name, org_ab, area_name=""):
+            """
+            添加学校类型的机构
+            @param school_type:
+            @param org_num:
+            @param org_name:
+            @param org_ab:
+            @param area_name:
+            @return:
+            """
+            with allure.step("添加学校类型的机构"):
+                self.switch_to_frame(self.frame_el, switch_out=False)
+                self.select_org_type("学校")
+                assert school_type in school_org_list
+                DropDownBox(self.school_type_select, self.school_type_opener).select(school_type)
+                self.org_code_input.send_keys(org_num)
+                self.org_name_input.send_keys(org_name)
+                self.org_alias_input.send_keys(org_ab)
+                if area_name and school_type == "大学":
+                    self.org_area_input.send_keys(area_name)
+                self.click(el=self.submit_btn)
+                self.click(el=self.confirm_btn)
+                self.switch_to_frame()
+            return SubOrgManagePage(self)
 
         def select_org_type(self, val):
             DropDownBox(self.org_type_select, self.org_type_select_opener).select(val)

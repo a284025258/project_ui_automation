@@ -3,7 +3,7 @@ import pytest
 
 from UITest.config import WEB_ROLE_CONF
 
-
+@pytest.mark.skip()
 @allure.severity(allure.severity_level.BLOCKER)
 @allure.feature("首页->登陆")
 class TestLoginPage:

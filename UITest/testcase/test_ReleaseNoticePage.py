@@ -20,7 +20,7 @@ def switch_to_notice_page(login_as):
 
     yield release_notice_page
 
-
+@pytest.mark.skip()
 @allure.severity(allure.severity_level.NORMAL)
 @allure.feature("考情综合管理->通知公告->通知管理->发布通知")
 class TestReleaseNoticePage:
