@@ -83,7 +83,6 @@ class TestOrgManagePage:
             if org_list:
                 with allure.step("选择管理机构"):
                     page.select_org(*org_list)
-            aa = page.org_name
             select_org_num = re.findall(r"\d+", page.org_name)[0]
             logger.info(f"选择的机构的名称：{page.org_name}")
             logger.info(f"选择的机构的编号：{select_org_num}")

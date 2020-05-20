@@ -26,12 +26,14 @@ class Table(BaseControl):
 
     @property
     def _tr(self):
-        return self._el.find_elements(By.TAG_NAME, 'tr')[1:]
+        return self.action.find_elements(css="tr")[1:]
+        # return self._el.find_elements(By.TAG_NAME, 'tr')[1:]
 
     @property
     def _th(self):
         """Table headers webelement list"""
-        ths = self._el.find_elements(By.CSS_SELECTOR, 'th')
+        # ths = self._el.find_elements(By.CSS_SELECTOR, 'th')
+        ths = self.action.find_elements(css='th')
         return ths
 
     @property
@@ -45,15 +47,6 @@ class Table(BaseControl):
         @return: {"title1":["info1","info2"],"title2":["info3","info4"]}
         """
         return dict(zip(self.titles, self.T_data))
-
-    @property
-    def row_data(self):
-        """Table data"""
-        ret = []
-        for row in self._tr:
-            tds = row.find_elements(By.TAG_NAME, 'td')
-            ret.append(tds)
-        return ret
 
     @property
     def data(self):

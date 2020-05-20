@@ -57,13 +57,6 @@ class Page:
         """强化版查询元素，附加等待与元素标记"""
         return self.action.find_elements(mode=mode, **locator)
 
-    def _mark(self, *el):
-        """
-        标记元素
-        @param el: 被标记的元素
-        """
-        self.action.mark(*el)
-
     def hover(self, hover_el=None, **locator):
         """
         悬停
@@ -118,19 +111,28 @@ class Page:
 
 class El:
 
-    def __init__(self, describe, time_out=0, mode="L", **locator):
+    def __init__(self, describe, *, instance=None, time_out=0, mode="L", **locator):
+        self.instance = instance
         self.describe = describe
         self._time_out = time_out
         self.mode = mode
         self.locator = locator
 
+    @property
+    def el(self):
+        if not isinstance(self.instance, Page):
+            raise ValueError("BadUsage: need init with a Page-like Object")
+        return self.__get__(self.instance, type(self.instance))
+
     def __get__(self, instance, owner) -> WebElement:
         if not isinstance(instance, Page):
-            raise ValueError("need use in a Page-like Object")
+            raise ValueError("need use in a Page-like Object\nEl(instance=driver)")
+
         if self._time_out:
             with instance.action.SetPageActionTime(instance.action, self._time_out) as action:
                 el = action.find_element(mode=self.mode, **self.locator)
             return el
+
         el = instance.action.find_element(mode=self.mode, **self.locator)
         return el
 

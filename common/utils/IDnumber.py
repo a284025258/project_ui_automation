@@ -78,5 +78,5 @@ def generate_ID(gender=None):
 
 
 if __name__ == '__main__':
-    for i in range(10):
-        print(generate_ID(gender=1))
+    for i in range(100):
+        print(generate_ID())

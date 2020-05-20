@@ -1,7 +1,11 @@
-from config import DRIVER_CHROME
+import os
+
+from config import DRIVER_CHROME, STATIC_DIR
 
 Start_Url = "https://125.70.9.114:41443/"
 Driver_Path = DRIVER_CHROME
+
+UploadImg = os.path.join(STATIC_DIR, "img/testUpload.jpg")
 WEB_ROLE_CONF = {
     "S": ("S51", "Sceea@123"),  # 省级账号
     "D": ("D5101", "Sceea@123"),  # 市级账号

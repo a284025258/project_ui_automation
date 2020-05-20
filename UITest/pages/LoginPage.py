@@ -19,7 +19,7 @@ class LoginPage(Page):
     login_button = El("登录按钮", css="div.yh-login-btn > button")
     message_box = El("登录提示信息", css=".ant-message", mode="V")
     verify_box = El("验证码输入框", x="//*[@placeholder='请输入验证码']")
-    verify_img = El("验证码图片", css="img")
+    verify_img = El("验证码图片", css="img[alt]")
     test_flag = El("登陆页面的测试条", css=".xt-flag-test")
 
     def login(self, username, password):

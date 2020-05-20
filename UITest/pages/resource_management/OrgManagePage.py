@@ -55,6 +55,7 @@ class OrgInfoMaintainPage(OrgManagePage):
     longitude = El("经度", css="#Longitude")
     latitude = El("维度", css="#Latitude")
 
+    search_technician_name=El("机构联系人搜索按钮",x='')
     save_btn = El("保存按钮", css="#orgEditSave")
 
     @property
