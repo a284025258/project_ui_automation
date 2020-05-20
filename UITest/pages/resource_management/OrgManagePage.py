@@ -55,8 +55,15 @@ class OrgInfoMaintainPage(OrgManagePage):
     longitude = El("经度", css="#Longitude")
     latitude = El("维度", css="#Latitude")
 
-    search_technician_name=El("机构联系人搜索按钮",x='')
+    search_technician_name = El("机构联系人搜索按钮", css='#demo-tabs-box-1 span.input-group-addon-ContactName')
+    search_contact_name = El("技术负责人搜索按钮", css='#demo-tabs-box-1  span.input-group-addon-TechnicianName')
+
     save_btn = El("保存按钮", css="#orgEditSave")
+
+    def search_technician(self,name):
+        self.technician_name.clear()
+        self.search_technician_name.click()
+
 
     @property
     def base_info(self):
@@ -73,7 +80,6 @@ class OrgInfoMaintainPage(OrgManagePage):
         _info["联系电话"] = self.duty_tel.get_attribute("value")
         _info["地址"] = self.address.get_attribute("value")
 
-        logger.info(f"基础信息:\n{_info}")
         return _info
 
     @property
@@ -88,7 +94,6 @@ class OrgInfoMaintainPage(OrgManagePage):
         _info["经度"] = self.longitude.get_attribute("value")
         _info["维度"] = self.latitude.get_attribute("value")
 
-        logger.info(f"其他信息:\n{_info}")
         return _info
 
 
