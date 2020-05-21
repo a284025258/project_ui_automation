@@ -111,8 +111,9 @@ class Page:
 
 class El:
 
-    def __init__(self, describe, *, instance=None, time_out=0, mode="L", **locator):
+    def __init__(self, describe, *, instance=None, lazy=False, time_out=0, mode="L", **locator):
         self.instance = instance
+        self.lazy = lazy
         self.describe = describe
         self._time_out = time_out
         self.mode = mode
@@ -126,14 +127,14 @@ class El:
 
     def __get__(self, instance, owner) -> WebElement:
         if not isinstance(instance, Page):
-            raise ValueError("need use in a Page-like Object\nEl(instance=driver)")
+            raise ValueError("BadUsage:need use in a Page-like Object\nEl(instance=driver)")
 
         if self._time_out:
             with instance.action.SetPageActionTime(instance.action, self._time_out) as action:
-                el = action.find_element(mode=self.mode, **self.locator)
+                el = action.find_element(mode=self.mode, lazy=self.lazy, **self.locator)
             return el
 
-        el = instance.action.find_element(mode=self.mode, **self.locator)
+        el = instance.action.find_element(mode=self.mode, lazy=self.lazy, **self.locator)
         return el
 
 
@@ -141,12 +142,12 @@ class Els(El):
 
     def __get__(self, instance, owner) -> List[WebElement]:
         if not isinstance(instance, Page):
-            raise ValueError("need use in a Page-like Object")
+            raise ValueError("BadUsage:need use in a Page-like Object")
         if self._time_out:
             with instance.action.SetPageActionTime(instance.action, self._time_out) as action:
-                els = action.find_elements(mode=self.mode, **self.locator)
+                els = action.find_elements(mode=self.mode,lazy=self.lazy, **self.locator)
             return els
-        els = instance.action.find_elements(mode=self.mode, **self.locator)
+        els = instance.action.find_elements(mode=self.mode, lazy=self.lazy, **self.locator)
         return els
 
 

@@ -8,7 +8,7 @@ class PageHelper(BaseControl):
 
     @property
     def els(self):
-        return self.el.find_element_by_css_selector("li")
+        return self._el.find_element_by_css_selector("li")
 
     @property
     def next_page(self):
@@ -31,7 +31,7 @@ class PageHelper(BaseControl):
         当前页码
         @return:
         """
-        _el = self.el.find_element_by_css_selector(".ant-pagination-item-active")
+        _el = self._el.find_element_by_css_selector(".ant-pagination-item-active")
         return _el.text
 
     @property

@@ -1,7 +1,7 @@
 from time import sleep
 from typing import List
 
-from selenium.common.exceptions import WebDriverException
+from selenium.common.exceptions import WebDriverException, TimeoutException, NoSuchElementException
 from selenium.webdriver import ActionChains
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
@@ -67,7 +67,7 @@ class PageAction:
             self.wait.until(lambda _: _el if _el.is_enabled() and _el.is_displayed() else False)
             _el.click()
 
-    def find_element(self, *, mode="L", **locator) -> WebElement:
+    def find_element(self, *, mode="L", lazy=False, **locator) -> WebElement:
         """
         查找元素
         :param locator: 定位器
@@ -75,6 +75,7 @@ class PageAction:
             - L : element in DOM
             - V : element is visibility
             - I : element is interactive
+        :param lazy: 是否懒加载
         :exception TimeOutException
         :return: marked WebElement
         """
@@ -87,13 +88,18 @@ class PageAction:
         }
         method = methods[mode]
         _locator = get_locator(locator)
-        el = self.wait.until(method(_locator))
+        if lazy:
+            return lazy_find(self.wait.until, method, _locator)
+        try:
+            el = self.wait.until(method(_locator))
+        except TimeoutException:
+            raise NoSuchElementException(_locator)
         if EC.staleness_of(el)(None):
             el = self.find_element(mode=mode, **locator)
         self.mark(el)
         return el
 
-    def find_elements(self, *, mode="L", **locator) -> List[WebElement]:
+    def find_elements(self, *, mode="L", lazy=False, **locator) -> List[WebElement]:
         """
         查询元素,超时后会返回None
         :param locator: 定位器
@@ -101,19 +107,12 @@ class PageAction:
             - L : elements in DOM
             - V : elements is visibility
             - I : elements is interactive
-        :exception TimeOutException
-        :return: marked WebElement
+        :param lazy: 是否懒加载
+        :return: marked WebElements
         """
         if step_time:
             sleep(step_time)
         # 自建类返回可交互的元素
-        interactive_of_any_elements_located = type("interactive_of_any_elements_located", (object,), {
-            "__init__":
-                lambda self_, locator_: setattr(self_, "locator", locator_),
-            "__call__":
-                lambda self_, driver:
-                [el_ for el_ in driver.find_elements(*self_.locator) if el_.is_enable() and el_.is_displayed()]
-        })
 
         methods = {
             "L": EC.presence_of_all_elements_located,
@@ -122,6 +121,8 @@ class PageAction:
         }
         method = methods[mode]
         locator = get_locator(locator)
+        if lazy:
+            return lazy_find(self.wait.until, method, locator)
         els = self.wait.until(method(locator))
         self.mark(*els)
         return els
@@ -190,3 +191,16 @@ class PageAction:
 
         def __exit__(self, exc_type, exc_val, exc_tb):
             self.pa.wait._timeout = self._time
+
+
+interactive_of_any_elements_located = type("interactive_of_any_elements_located", (object,), {
+    "__init__":
+        lambda self_, locator_: setattr(self_, "locator", locator_),
+    "__call__":
+        lambda self_, driver:
+        [el_ for el_ in driver.find_elements(*self_.locator) if el_.is_enable() and el_.is_displayed()]
+})
+
+
+def lazy_find(until, method, locator) -> ():
+    return lambda: until(method(locator))
