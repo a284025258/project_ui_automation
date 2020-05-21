@@ -56,14 +56,30 @@ class OrgInfoMaintainPage(OrgManagePage):
     latitude = El("维度", css="#Latitude")
 
     search_technician_name = El("机构联系人搜索按钮", css='#demo-tabs-box-1 span.input-group-addon-ContactName')
+    search_technician_name_box = El("机构联系人搜索框", mode="V", x='(//*[contains(@class,"panel combo-p")])[1]')
+
     search_contact_name = El("技术负责人搜索按钮", css='#demo-tabs-box-1  span.input-group-addon-TechnicianName')
+    search_contact_name_box = El("技术负责人搜索框", mode="V", x='(//*[contains(@class,"panel combo-p")])[2]')
 
     save_btn = El("保存按钮", css="#orgEditSave")
 
-    def search_technician(self,name):
-        self.technician_name.clear()
-        self.search_technician_name.click()
-
+    def search_contact(self, name):
+        """搜索机构联系人"""
+        with allure.step(f"搜索机构联系人:{name}"):
+            self.contact_name.clear()
+            self.contact_name.send_keys(name)
+            info=Table(self.search_contact_name_box).info
+            logger.info(info)
+            self.screenshot_in_allure()
+        return info
+    def search_technician(self, name):
+        """搜索机构负责人"""
+        with allure.step(f"搜索机构负责人:{name}"):
+            self.technician_name.clear()
+            self.search_technician_name.click()
+            self.technician_name.send_keys(name)
+            logger.info(Table(self.search_technician_name_box).info)
+            self.screenshot_in_allure()
 
     @property
     def base_info(self):
@@ -310,11 +326,11 @@ class SubOrgManagePage(OrgManagePage):
         def add_org_school(self, school_type, org_num, org_name, org_ab, area_name=""):
             """
             添加学校类型的机构
-            @param school_type:
-            @param org_num:
-            @param org_name:
-            @param org_ab:
-            @param area_name:
+            @param school_type: 学校类型
+            @param org_num: 机构编号
+            @param org_name: 机构名称
+            @param org_ab:机构简称
+            @param area_name:区域名称 || 大学才有
             @return:
             """
             with allure.step("添加学校类型的机构"):

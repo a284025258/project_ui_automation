@@ -7,4 +7,4 @@ class BaseControl:
 
     def __init__(self, el):
         self._el: WebElement = el
-        self.action = PageAction(el)
+        self.action = PageAction(el, 2)

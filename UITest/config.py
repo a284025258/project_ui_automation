@@ -2,7 +2,7 @@ import os
 
 from config import DRIVER_CHROME, STATIC_DIR
 
-Start_Url = "https://125.70.9.114:41443/"
+Start_Url = "https://125.70.9.114:41111/"
 Driver_Path = DRIVER_CHROME
 
 UploadImg = os.path.join(STATIC_DIR, "img/testUpload.jpg")

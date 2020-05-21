@@ -5,7 +5,7 @@ from selenium.webdriver.chrome.options import Options
 
 from UITest.common.page_manage import pm
 from UITest.common.po_base import Page
-from UITest.config import Driver_Path
+from UITest.config import Driver_Path, Start_Url
 
 page = None
 
@@ -15,7 +15,8 @@ def login_as(browser):
     def _login_as(role_name):
         with allure.step("登陆"):
             _page = pm("LoginPage")(browser)
-            _page._clear_cache()
+            # _page._clear_cache()
+            _page.driver.get(Start_Url)
             return _page.login_as_role(role_name)
     return _login_as
 
@@ -25,8 +26,9 @@ def browser():
     global page
     if page is None:
         options = Options()
-        # options.add_argument('--headless')
+        options.add_argument('--headless')
         options.add_argument('--start-maximized')
+        # options.add_argument("no-sandbox")
         options.add_argument('--ignore-certificate-errors')  # 忽略https报错
         options.add_argument('--disable-gpu')  # 谷歌文档提到需要加上这个属性来规避bug
         options.add_experimental_option("excludeSwitches", ['enable-automation'])

@@ -27,13 +27,16 @@ class Table(BaseControl):
     @property
     def _tr(self):
         return self.action.find_elements(css="tr")[1:]
-        # return self._el.find_elements(By.TAG_NAME, 'tr')[1:]
 
     @property
     def _th(self):
         """Table headers webelement list"""
-        # ths = self._el.find_elements(By.CSS_SELECTOR, 'th')
-        ths = self.action.find_elements(css='th')
+
+        tr = self.action.find_element(css='tr')
+        ths = tr.find_elements_by_css_selector("th")
+        if not ths:
+            # 畸形表格适配
+            ths = tr.find_elements_by_css_selector("td")
         return ths
 
     @property

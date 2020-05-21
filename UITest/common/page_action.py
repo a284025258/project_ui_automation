@@ -1,4 +1,5 @@
 from time import sleep
+from typing import List
 
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver import ActionChains
@@ -20,13 +21,13 @@ class PageAction:
     此类用于封装页面主要方法
     """
 
-    def __init__(self, carrier):
+    def __init__(self, carrier, time_out=0):
         """
         :type carrier: WebElement,WebDriver
         :param carrier:
         """
         self.carrier = carrier
-        self.wait = WebDriverWait(carrier, DefaultTimeOut)
+        self.wait = WebDriverWait(carrier, time_out or DefaultTimeOut)
         self._actions = ActionChains(carrier.parent) if isinstance(carrier, WebElement) else ActionChains(carrier)
         self.is_el = isinstance(carrier, WebElement)
         self.executor = self.carrier.parent.execute_script if self.is_el else self.carrier.execute_script
@@ -66,7 +67,7 @@ class PageAction:
             self.wait.until(lambda _: _el if _el.is_enabled() and _el.is_displayed() else False)
             _el.click()
 
-    def find_element(self, *, mode="L", **locator):
+    def find_element(self, *, mode="L", **locator) -> WebElement:
         """
         查找元素
         :param locator: 定位器
@@ -92,7 +93,7 @@ class PageAction:
         self.mark(el)
         return el
 
-    def find_elements(self, *, mode="L", **locator):
+    def find_elements(self, *, mode="L", **locator) -> List[WebElement]:
         """
         查询元素,超时后会返回None
         :param locator: 定位器
