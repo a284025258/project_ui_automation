@@ -3,15 +3,15 @@
 todo 选择地区
 """
 import os
-import time
 import random
+import time
 
 from config import STATIC_DIR
 
 
 def __get_districtcodes():
     districtcodes = []
-    with open(os.path.join(STATIC_DIR,'idcode.txt'), mode='r', encoding='utf-8') as f:
+    with open(os.path.join(STATIC_DIR, 'idcode.txt'), mode='r', encoding='utf-8') as f:
         for l in f.readlines():
             districtcodes.append(l.strip()[:6])
     return districtcodes

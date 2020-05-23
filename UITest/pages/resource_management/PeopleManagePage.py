@@ -3,6 +3,7 @@ import allure
 from UITest.common.faker_info import f
 from UITest.common.po_base import El
 from UITest.config import UploadImg
+from UITest.controls.DivTable import DivTable
 from UITest.controls.DropDownBox import DropDownBox
 from UITest.controls.LabelGroup import LabelGroup
 from UITest.pages.IndexPage import IndexPage
@@ -15,6 +16,7 @@ class PeopleManagePage(IndexPage):
     job_select_open = El('工作状态', css='#jobtype .ant-select-selection')
     search_input = El('人员查询输入框', css='[placeholder="查询姓名或身份证号"]')
     search_btn = El('查询按钮', x="//*[text()='查询']/parent::button")
+    _table = El("人员表格", css=".fyl-rygl-table")
 
     def query_people(self, o_name="", c_type="", j_type="", p_name_or_id=""):
         """
@@ -30,6 +32,21 @@ class PeopleManagePage(IndexPage):
         _select_something(self, self.job_select_open, j_type)
         self.search_input.send_keys(p_name_or_id)
         self.search_btn.click()
+
+    @property
+    def table(self):
+        return DivTable(self._table,
+                        {"x": "./div[1]/div"},
+                        {"x": ".//*[@class='fyl-rygl-table-list']"},
+                        {"x": "./div"})
+
+    @property
+    def info_compliance(self):
+        tag = True
+        if not self.org_select_open.text == "全部":
+            tag = self.org_select_open.text in  self.table.info["部门名称"]
+        elif not self.com_select_open.text == "全部":
+            pass
 
 
 def _select_something(self, el, val):

@@ -7,41 +7,18 @@ from UITest.common.page_control import BaseControl
 
 class Table(BaseControl):
     """获取表格类数据"""
-
     def get_row(self, info):
+        """通过一个数据获取行数据"""
         sleep(1)
         for data in self.data:
             if info in data:
                 return data
         else:
             return None
-
-    @property
-    def row(self):
-        return len(self._tr)
-
-    @property
-    def col(self):
-        return len(self._th)
-
-    @property
-    def _tr(self):
-        return self.action.find_elements(css="tr")[1:]
-
-    @property
-    def _th(self):
-        """Table headers webelement list"""
-
-        tr = self.action.find_element(css='tr')
-        ths = tr.find_elements_by_css_selector("th")
-        if not ths:
-            # 畸形表格适配
-            ths = tr.find_elements_by_css_selector("td")
-        return ths
-
     @property
     def titles(self):
-        return [th.text for th in self._th]
+        """标题"""
+        return [th.text for th in self._ths]
 
     @property
     def info(self):
@@ -59,10 +36,37 @@ class Table(BaseControl):
                 ["info3","info4"]]
         """
         ret = []
-        for row in self._tr:
+        for row in self._trs:
             tds = row.find_elements(By.TAG_NAME, 'td')
             ret.append([td.text for td in tds])
         return ret
+
+
+    @property
+    def row(self):
+        """行"""
+        return len(self._trs)
+
+    @property
+    def col(self):
+        """列"""
+        return len(self._ths)
+
+    @property
+    def _trs(self):
+        return self.action.find_elements(css="tr")[1:]
+
+    @property
+    def _ths(self):
+        """Table headers webelement list"""
+
+        tr = self.action.find_element(css='tr')
+        ths = tr.find_elements_by_css_selector("th")
+        if not ths:
+            # 畸形表格适配
+            ths = tr.find_elements_by_css_selector("td")
+        return ths
+
 
     @property
     def T_data(self):

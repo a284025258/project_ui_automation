@@ -68,10 +68,11 @@ class OrgInfoMaintainPage(OrgManagePage):
         with allure.step(f"搜索机构联系人:{name}"):
             self.contact_name.clear()
             self.contact_name.send_keys(name)
-            info=Table(self.search_contact_name_box).info
+            info = Table(self.search_contact_name_box).info
             logger.info(info)
             self.screenshot_in_allure()
         return info
+
     def search_technician(self, name):
         """搜索机构负责人"""
         with allure.step(f"搜索机构负责人:{name}"):
@@ -149,14 +150,28 @@ class DepartmentInfoMaintainPage(OrgManagePage):
         msg = El("信息框内容", css="div.layui-layer-padding")
         confirm_btn = El("确认按钮", css=".layui-layer-btn0")
 
-        def add_department(self, department_name, department_type, *exam_projects):
+        def add_department(self, info):
             """
             添加部门
-            @param department_name: 部门名称
-            @param department_type: 部门类别
-            @param exam_projects: 部门分管考试项目
+            @param info = {
+                "d_name":部门名称,
+                "d_type":部门类别,
+                "d_domain":[部门分管考试项目]
+            }
+             department_name: 部门名称
+             department_type: 部门类别  ["管理部门","业务部门","技术部门","综合部门","后勤部门"]
+             exam_projects: 部门分管考试项目
+            ["普通高考", "成人高考", "研究生考试", "自考", "学业水平考试", "计算机等级考试",
+             "英语四六级B级考试", "中小学教师资格考试", "英语等级考试（PETS）", "书画等级考试（CCPT）",
+             "高校教师技能考试", "高校自主选拔测试", "高校教师理论考试", "剑桥少儿英语（YLE）"]
+
             @return:
             """
+
+            department_name = info["d_name"]
+            department_type = info["d_type"]
+            exam_projects = info["d_domain"]
+
             self.switch_to_frame(locator="main-body", switch_out=False)
             with allure.step("添加部门"):
                 self.click(self.department_name)

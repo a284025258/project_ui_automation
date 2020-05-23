@@ -45,22 +45,23 @@ class TestOrgManagePage:
     @allure.story("部门信息维护")
     def test_add_department(self, switch_to_org_management):
         """新增部门后删除该部门"""
-        d_name = "测试机构" + f.sentence(3)
-        d_type = "综合部门"
-        d_domain = "上半年英语四六级B级考试", "剑桥少儿英语", "统一考试"
-
+        test_info = {
+            "d_name": "测试机构" + f.sentence(3),
+            "d_type": "综合部门",
+            "d_domain": ["上半年英语四六级B级考试", "剑桥少儿英语", "统一考试"]
+        }
         page = switch_to_org_management.switch_tab("部门信息维护")
         info = page.click_add_department_btn() \
-            .add_department(d_name, d_type, *d_domain) \
-            .get_tr(d_name)
+            .add_department(test_info) \
+            .get_tr(test_info["d_name"])
         logger.info(f"行信息:{info}")
         page.screenshot_in_allure()
         assert info
-        assert d_type in info
-        assert set(d_domain) == set(info[3].split("、"))
-        page.del_department(d_name)
+        assert test_info["d_type"] in info
+        assert set(test_info["d_domain"]) == set(info[3].split("、"))
+        page.del_department(test_info["d_name"])
         page.screenshot_in_allure()
-        assert page.get_tr(d_name) is None
+        assert page.get_tr(test_info["d_name"]) is None
 
     @allure.story("下级机构管理")
     def test_search_department(self, switch_to_org_management):
