@@ -43,7 +43,7 @@ class TestOrgManagePage:
         assert other_info
 
     @allure.story("部门信息维护")
-    def test_add_department(self, switch_to_org_management):
+    def test_add_and_del_department(self, switch_to_org_management):
         """新增部门后删除该部门"""
         test_info = {
             "d_name": "测试机构" + f.sentence(3),

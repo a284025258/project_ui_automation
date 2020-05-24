@@ -47,7 +47,7 @@ def get_locator(locator: dict):
 
 if __name__ == '__main__':
     print(Locators.items())
-    print(get_locator(("text", "locator")))
-    print(get_locator(("css", "locator")))
-    assert get_locator(("x", "//a")) == (By.XPATH, "//a")
-    assert get_locator(("text", "value")) == (By.XPATH, "//*[text()='value']")
+    print(get_locator({"text": "locator"}))
+    print(get_locator({"css": "locator"}))
+    assert get_locator({"x": "//a"}) == (By.XPATH, "//a")
+    assert get_locator({"text": "value"}) == (By.XPATH, "//*[text()='value']")

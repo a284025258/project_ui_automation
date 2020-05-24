@@ -93,7 +93,7 @@ class PageAction:
         try:
             el = self.wait.until(method(_locator))
         except TimeoutException:
-            raise NoSuchElementException(_locator)
+            raise NoSuchElementException(f"find time out in find {_locator}")
         if EC.staleness_of(el)(None):
             el = self.find_element(mode=mode, **locator)
         self.mark(el)

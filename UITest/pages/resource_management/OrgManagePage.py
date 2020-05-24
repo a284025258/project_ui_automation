@@ -190,7 +190,7 @@ class DepartmentInfoMaintainPage(OrgManagePage):
                 self.click(el=self.confirm_btn)
                 self.switch_to_frame()
             # 加载信息过慢
-            sleep(3)
+            sleep(2)
             return DepartmentInfoMaintainPage(self)
 
 

@@ -12,12 +12,17 @@ page = None
 
 @pytest.fixture(scope="session")
 def login_as(browser):
-    def _login_as(role_name):
+    """登陆fixture"""
+
+    def _login_as(role_name, do_login=True):
         with allure.step("登陆"):
             _page = pm("LoginPage")(browser)
             _page._clear_cache()
             _page.driver.get(Start_Url)
-            return _page.login_as_role(role_name)
+            if do_login:
+                return _page.login_as_role(role_name)
+            return _page
+
     return _login_as
 
 

@@ -9,6 +9,7 @@ from pytesseract import pytesseract
 
 
 def get_verify_code(img_path):
+    img_path=img_path.replace("\\","/")
     content = pytesseract.image_to_string(__process_image(img_path),
                                           config="--psm 6 --oem 3 -c tessedit_char_whitelist=0123456789")  # 解析图片
     return content
@@ -60,4 +61,5 @@ def __remove_noise(img, k=4):
 
 if __name__ == '__main__':
     i_path = r"C:\Users\admin\Pictures\test.jpg"
+    # i_path = r"C:\Users\c\Pictures\test.jpg"
     print(get_verify_code(i_path))

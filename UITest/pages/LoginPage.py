@@ -69,7 +69,7 @@ class LoginPage(Page):
         :return:
         """
         try:
-            self.driver.find_element_by_css_selector("div.yh-login-btn > button")
+            self.login_button
         except NoSuchElementException:
             return True
         return False

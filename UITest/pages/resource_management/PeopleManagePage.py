@@ -1,13 +1,11 @@
 import allure
 
-from UITest.common.faker_info import f
 from UITest.common.po_base import El
 from UITest.config import UploadImg
 from UITest.controls.DivTable import DivTable
 from UITest.controls.DropDownBox import DropDownBox
 from UITest.controls.LabelGroup import LabelGroup
 from UITest.pages.IndexPage import IndexPage
-from common.utils.IDnumber import generate_ID
 
 
 class PeopleManagePage(IndexPage):
@@ -30,6 +28,7 @@ class PeopleManagePage(IndexPage):
         _select_something(self, self.org_select_open, o_name)
         _select_something(self, self.com_select_open, c_type)
         _select_something(self, self.job_select_open, j_type)
+        # todo 身份证校验，目前只有名字校验
         self.search_input.send_keys(p_name_or_id)
         self.search_btn.click()
 
@@ -42,14 +41,62 @@ class PeopleManagePage(IndexPage):
 
     @property
     def info_compliance(self):
-        tag = True
-        if not self.org_select_open.text == "全部":
-            tag = self.org_select_open.text in  self.table.info["部门名称"]
-        elif not self.com_select_open.text == "全部":
-            pass
+        """表格中数据合规"""
+
+        return self._department_name_same and self._com_type_same and self._job_type_same and self._search_input_same
+
+    @property
+    def _department_name_same(self):
+        """部门名称与表格中相同"""
+        if self.org_select_open.text == "全部":
+            return True
+        else:
+            for dep in self.table["部门名称"]:
+                if self.org_select_open.text != dep:
+                    return False
+            else:
+                return True
+
+    @property
+    def _com_type_same(self):
+        """编制类型与表格中相同"""
+        if self.com_select_open.text == "全部":
+            return True
+        else:
+            for dep in self.table["编制类型"]:
+                if self.com_select_open.text != dep:
+                    return False
+            else:
+                return True
+
+    @property
+    def _job_type_same(self):
+        """工作状态与表格中相同"""
+        if self.job_select_open.text == "全部":
+            return True
+        else:
+            for dep in self.table["工作状态"]:
+                if self.job_select_open.text != dep:
+                    return False
+            else:
+                return True
+
+    @property
+    def _search_input_same(self):
+        """搜索框与表格中相同"""
+        val = self.search_input.get_attribute("value")
+        if val == "":
+            return True
+        else:
+            for i in self.table["姓名"]:
+                if val not in i:
+                    return False
+            else:
+                return True
 
 
 def _select_something(self, el, val):
+    """这个页面选择控件的代理选择的实现"""
     if val:
         el.click()
         _s_id = el.get_attribute("aria-controls")
@@ -114,17 +161,17 @@ class NewPeoplePage(IndexPage):
         @return: self
         """
         with allure.step("输入基本信息"):
-            self.fullname.send_keys(info_dict.get("姓名") or f.name())
-            self.id_num.send_keys(info_dict.get("身份证号") or generate_ID())
+            self.fullname.send_keys(info_dict["姓名"])
+            self.id_num.send_keys(info_dict["身份证号"])
             # 前端做了自动识别 性别 出生日期不需要手动填写，如果需要改的话传值需符合规范
-            LabelGroup(self.gender_box).select_label(info_dict.get("性别") or "")
-            LabelGroup(self.marriage_box).select_label(info_dict.get("婚否") or "")
+            LabelGroup(self.gender_box).select_label(info_dict["性别"])
+            LabelGroup(self.marriage_box).select_label(info_dict["婚否"])
             # todo 生日输入逻辑
             info_dict.get("出生日期", "")
-            _select_something(self, self.ethnic_open, info_dict.get("民族") or "汉族")
-            self.email_input.send_keys(info_dict.get("邮箱") or f.email())
-            self.office_phone.send_keys(info_dict.get("办公电话") or f.phone_number())
-            self.contact_phone.send_keys(info_dict.get("联系电话") or f.phone_number())
+            _select_something(self, self.ethnic_open, info_dict["民族"])
+            self.email_input.send_keys(info_dict["邮箱"])
+            self.office_phone.send_keys(info_dict["办公电话"])
+            self.contact_phone.send_keys(info_dict["联系电话"])
         return self
 
     def input_other_info(self, info_dict):
