@@ -25,7 +25,7 @@ class WapperControl(BaseControl):
     def value(self):
         """
         返回下拉框的值
-        @return: text > value > placeholder
+        :return: text > value > placeholder
         """
         ga = self.opener.get_attribute
         return self.opener.text or ga("value") or ga("placeholder")

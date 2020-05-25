@@ -3,7 +3,7 @@ import logging
 from selenium.webdriver.common.keys import Keys
 
 from UITest.common.po_base import El
-# from UITest.controls.Table import Table
+from UITest.controls.Table import Table
 from UITest.pages.IndexPage import IndexPage
 
 logger = logging.getLogger(__name__)
@@ -24,8 +24,7 @@ class AllNoticePage(IndexPage):
 
     @property
     def table(self):
-        return
-        # return Table(self.all_notice_table)
+        return Table(self.all_notice_table)
 
     def check_detail(self, notice):
         self.click(x=f"//div[@title='{notice}']")

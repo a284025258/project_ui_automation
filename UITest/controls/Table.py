@@ -7,14 +7,16 @@ from UITest.common.page_control import BaseControl
 
 class Table(BaseControl):
     """获取表格类数据"""
+
     def get_row(self, info):
         """通过一个数据获取行数据"""
-        sleep(1)
+        sleep(0.5)
         for data in self.data:
             if info in data:
                 return data
         else:
             return None
+
     @property
     def titles(self):
         """标题"""
@@ -24,7 +26,7 @@ class Table(BaseControl):
     def info(self):
         """
         返回表信息
-        @return: {"title1":["info1","info2"],"title2":["info3","info4"]}
+        :return: {"title1":["info1","info2"],"title2":["info3","info4"]}
         """
         return dict(zip(self.titles, self.T_data))
 
@@ -32,7 +34,7 @@ class Table(BaseControl):
     def data(self):
         """
         返回表信息
-        @return: [["info1","info2"],
+        :return: [["info1","info2"],
                 ["info3","info4"]]
         """
         ret = []
@@ -40,7 +42,6 @@ class Table(BaseControl):
             tds = row.find_elements(By.TAG_NAME, 'td')
             ret.append([td.text for td in tds])
         return ret
-
 
     @property
     def row(self):
@@ -66,7 +67,6 @@ class Table(BaseControl):
             # 畸形表格适配
             ths = tr.find_elements_by_css_selector("td")
         return ths
-
 
     @property
     def T_data(self):

@@ -36,14 +36,3 @@ class TestReleaseNoticePage:
             page = my_notice_page.check_detail(title)
             page.screenshot_in_allure("检查通知发布情况")
         assert content in page.detail_content.text
-
-    def test_send_notice2(self, switch_to_notice_page):
-        """测试发布通知2"""
-        title = "测试标题" + f.sentence(3)[:-1]
-        content = "测试内容\n" + f.sentence(100)[:-1]
-        with allure.step("发布通知"):
-            my_notice_page = switch_to_notice_page.send_notice(title, "全部", content)
-        with allure.step("检查通知发布情况"):
-            page = my_notice_page.check_detail(title)
-            page.screenshot_in_allure("检查通知发布情况")
-        assert content in page.detail_content.text

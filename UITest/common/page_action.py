@@ -58,7 +58,7 @@ class PageAction:
         """
         # 判断使用el还是locator参数
         _el = self._get_el(el, **locator)
-
+        self.mark(_el)
         if force:
             # 使用js点击元素
             click_js = "arguments[0].click()"

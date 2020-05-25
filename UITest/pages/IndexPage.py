@@ -61,7 +61,7 @@ class IndexPage(Page):
     def select_top_menu(self, by):
         """
         通过输入的顶部菜单名称或者index来选择菜单
-        @param by:
+        :param by:
         @return:
         """
         self.driver.switch_to.default_content()
@@ -72,7 +72,7 @@ class IndexPage(Page):
     def select_aside_menu(self, by):
         """
         通过传入的名称列表选择对应侧边菜单
-        @param by:
+        :param by:
         @return:
         """
         self.driver.switch_to.default_content()
@@ -99,7 +99,7 @@ class UserInfoBox(Page):
         """
         通过对innerHTML的读取，将内容作为字典返回
         fixme 如果改变页面布局可能需要该改代码
-        @return: info_
+        :return: info_
         """
         raw_info = self.base_info_box.get_attribute('innerHTML')
 
@@ -147,10 +147,10 @@ class PassWordChangeBox(Page):
     def change_password(self, old, new, confirm_password=None):
         """
         重置密码
-        @param old: 旧密码
-        @param new: 新密码
-        @param confirm_password: 确认密码为空时为新密码
-        @return:
+        :param old: 旧密码
+        :param new: 新密码
+        :param confirm_password: 确认密码为空时为新密码
+        :return:
         """
         self.old_password_box.clear()
         self.old_password_box.send_keys(old)

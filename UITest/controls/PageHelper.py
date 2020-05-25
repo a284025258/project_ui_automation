@@ -14,7 +14,7 @@ class PageHelper(BaseControl):
     def next_page(self):
         """
         上一页
-        @return:
+        :return:
         """
         return self.els[1]
 
@@ -22,14 +22,14 @@ class PageHelper(BaseControl):
     def last_page(self):
         """
         下一页
-        @return:
+        :return:
         """
         return self.els[-1]
 
     def current_page(self):
         """
         当前页码
-        @return:
+        :return:
         """
         _el = self._el.find_element_by_css_selector(".ant-pagination-item-active")
         return _el.text
@@ -38,7 +38,7 @@ class PageHelper(BaseControl):
     def page_msg(self):
         """
 
-        @return: 显示的内容：如当前显示1-20条，共39条
+        :return: 显示的内容：如当前显示1-20条，共39条
         """
         return self.els[0].text
 

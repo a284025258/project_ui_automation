@@ -153,7 +153,7 @@ class DepartmentInfoMaintainPage(OrgManagePage):
         def add_department(self, info):
             """
             添加部门
-            @param info = {
+            :param info = {
                 "d_name":部门名称,
                 "d_type":部门类别,
                 "d_domain":[部门分管考试项目]
@@ -219,7 +219,7 @@ class SubOrgManagePage(OrgManagePage):
     def org_name_compliance(self):
         """
         判断机构名称是否合规，通过机构名称前的标号进行判断
-        @return:
+        :return:
         """
         i = self.table.info
         s_org_names = self.table.info["机构名称"]
@@ -287,8 +287,8 @@ class SubOrgManagePage(OrgManagePage):
     def _select_org(self, org_name, _open=False):
         """
         选择管理机构
-        @param _open: 展开机构
-        @param org_name: 机构名称
+        :param _open: 展开机构
+        :param org_name: 机构名称
         @return:
         """
         tree = TreeDropDownBox(self.query_org_drop_box, self.query_org_drop_box_opener)
@@ -298,8 +298,8 @@ class SubOrgManagePage(OrgManagePage):
     def _select_org_type(self, org_type, _open=False):
         """
         选择机构类型
-        @param _open: 展开机构类型
-        @param org_type: 机构类型
+        :param _open: 展开机构类型
+        :param org_type: 机构类型
         @return:
         """
         tree = TreeDropDownBox(self.query_org_type_drop_box, self.query_org_type_drop_box_opener)
@@ -341,12 +341,12 @@ class SubOrgManagePage(OrgManagePage):
         def add_org_school(self, school_type, org_num, org_name, org_ab, area_name=""):
             """
             添加学校类型的机构
-            @param school_type: 学校类型
-            @param org_num: 机构编号
-            @param org_name: 机构名称
-            @param org_ab:机构简称
-            @param area_name:区域名称 || 大学才有
-            @return:
+            :param school_type: 学校类型
+            :param org_num: 机构编号
+            :param org_name: 机构名称
+            :param org_ab:机构简称
+            :param area_name:区域名称 || 大学才有
+            :return:
             """
             with allure.step("添加学校类型的机构"):
                 self.switch_to_frame(self.frame_el, switch_out=False)

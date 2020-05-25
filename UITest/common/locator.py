@@ -26,8 +26,8 @@ Locators = __get_locators(_Locators)
 def get_locator(locator: dict):
     """
     获取locator
-    @param locator:
-    @return:
+    :param locator:
+    :return:
 
     Usage:
     get_locator(("css", "div a")) == (By.CSS_SELECTOR,"div a")
@@ -37,7 +37,7 @@ def get_locator(locator: dict):
     """
     if not isinstance(locator, dict) or len(locator) != 1:
         raise ValueError("bad usage")
-    by, val = locator.popitem()
+    by, val = locator.copy().popitem()
     if by == "text_c":
         val = f"//*[contains(text(),'{val}')]"
     elif by == "text":

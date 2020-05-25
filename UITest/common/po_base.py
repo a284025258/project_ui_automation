@@ -15,6 +15,9 @@ from UITest.config import Start_Url
 
 
 class Page:
+    """
+    页面类基类
+    """
 
     def __init__(self, driver_or_page):
         if isinstance(driver_or_page, Page):
@@ -60,15 +63,15 @@ class Page:
     def hover(self, hover_el=None, **locator):
         """
         悬停
-        @param hover_el: 被悬停的元素,元素需要可见
+        :param hover_el: 被悬停的元素,元素需要可见
         """
         return self.action.hover(el=hover_el, **locator)
 
     def switch_to_frame(self, locator=None, switch_out=True):
         """
         切换frame
-        @param locator: 为空则默认切换到第一个frame
-        @param switch_out: 切换前先切换到最上级，默认开启
+        :param locator: 为空则默认切换到第一个frame
+        :param switch_out: 切换前先切换到最上级，默认开启
         """
         if switch_out:
             self.driver.switch_to.default_content()
@@ -79,7 +82,7 @@ class Page:
     def switch_to_new_window(self, auto_close=False):
         """
         切换到新窗口
-        @param auto_close: 为真则关闭当前页面后切换
+        :param auto_close: 为真则关闭当前页面后切换
         """
         if auto_close:
             self.driver.close()
@@ -88,8 +91,8 @@ class Page:
     def switch_to_alter(self, accept=True, keys_to_send=None):
         """
         切换到弹框
-        @param accept: 若为真则接受，若为假则取消
-        @param keys_to_send: 若存在则输入后确认
+        :param accept: 若为真则接受，若为假则取消
+        :param keys_to_send: 若存在则输入后确认
         """
         alert = self.action.wait.until(EC.alert_is_present())
         if keys_to_send is not None:
@@ -101,7 +104,7 @@ class Page:
     def screenshot_in_allure(self, step_name="运行快照"):
         """
         添加屏幕截图
-        @param step_name: 步骤名
+        :param step_name: 步骤名
         """
         try:
             allure.attach(self.driver.get_screenshot_as_png(), step_name, allure.attachment_type.PNG)
@@ -110,8 +113,17 @@ class Page:
 
 
 class El:
+    """页面元素类"""
 
     def __init__(self, describe, *, instance=None, lazy=False, time_out=0, mode="L", **locator):
+        """
+        :param describe: 描述
+        :param instance: 实例
+        :param lazy: 是否懒加载
+        :param time_out: 重置超时时间
+        :param mode: 查询模式
+        :param locator:定位符
+        """
         self.instance = instance
         self.lazy = lazy
         self.describe = describe
@@ -136,6 +148,9 @@ class El:
 
         el = instance.action.find_element(mode=self.mode, lazy=self.lazy, **self.locator)
         return el
+
+    def __str__(self):
+        return f"<{self.__class__}><{self.describe}><mode:{self.mode}><locator:{self.locator}>"
 
 
 class Els(El):

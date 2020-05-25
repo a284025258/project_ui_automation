@@ -11,8 +11,8 @@ class MyNoticePage(AllNoticePage):
     def select_to_del(self, *index):
         """
 
-        @param index: 0:当前页全选，1-21为个数
-        @return:
+        :param index: 0:当前页全选，1-21为个数
+        :return:
         """
         if 0 in index:
             self.del_selector[0].click()
