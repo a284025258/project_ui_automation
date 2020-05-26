@@ -32,19 +32,35 @@ class PeopleManagePage(IndexPage):
         }
         :return:
         """
-
-        _select_something(self, self.org_select_open, info.get("部门"))
-        _select_something(self, self.com_select_open, info.get("编制类型"))
-        _select_something(self, self.job_select_open, info.get("工作状态"))
-        # todo 身份证校验，目前只有名字校验
-        self.search_input.send_keys(info.get("人员", ""))
-        self.search_btn.click()
-        self.screenshot_in_allure(f"查询人员：查询条件>>>{info}")
+        with allure.step(f"查询人员：查询条件>>>{info}"):
+            _select_something(self, self.org_select_open, info.get("部门"))
+            _select_something(self, self.com_select_open, info.get("编制类型"))
+            _select_something(self, self.job_select_open, info.get("工作状态"))
+            # todo 身份证校验，目前只有名字校验
+            self.search_input.send_keys(info.get("人员", ""))
+            self.search_btn.click()
+            self.screenshot_in_allure(f"查询人员：查询条件>>>{info}")
         return self
 
     def click_add_people_btn(self):
+        """
+        点击新增人员
+        :return: NewPeoplePage obj
+        """
         self.add_people_btn.click()
         return NewPeoplePage(self)
+
+    def del_people(self, name):
+        """
+        删除人员
+        :param name: 人员名称
+        :return:
+        """
+        logger.info("删除人员：>>>" + name)
+        with allure.step("删除人员"):
+            self.find_element(x=f'//div[text()="{name}"][2]/..//button[string()="删 除"]').click()
+            self.click(x='//button[contains(string(),"确认")]')
+        return self
 
     @property
     def table(self):
@@ -204,7 +220,9 @@ class NewPeoplePage(IndexPage):
 
     def _input_time(self, t):
         """当前页面的输入时间实现"""
-        self.find_element(css=".ant-calendar-date-input-wrap input").send_keys(t + Keys.ENTER)
+        el = self.find_element(css=".ant-calendar-date-input-wrap input")
+        el.clear()
+        el.send_keys(t + Keys.ENTER)
 
     def input_other_info(self, info_dict):
         """

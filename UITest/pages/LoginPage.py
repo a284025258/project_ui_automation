@@ -50,9 +50,9 @@ class LoginPage(Page):
         verify_code = get_verify_code(tmp_png_name)
         self.verify_box.send_keys(verify_code)
         self.login_button.click()
-        sleep(0.5)
         if self.is_login:
             return True
+        sleep(0.5)
         max_time -= 1
         return self.verify(max_time)
 

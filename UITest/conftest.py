@@ -5,9 +5,16 @@ from selenium.webdriver.chrome.options import Options
 
 from UITest.common.page_manage import pm
 from UITest.common.po_base import Page
-from UITest.config import Driver_Path, Start_Url
+from UITest.config import Driver_Path, Start_Url, WEB_ROLE_CONF
 
 page = None
+
+
+@pytest.fixture(scope="module", params=WEB_ROLE_CONF.keys())
+def index_page(login_as, request):
+    """登陆"""
+    index_page = login_as(request.param)
+    return index_page
 
 
 @pytest.fixture(scope="session")

@@ -7,7 +7,7 @@ class DropDownBox(WapperControl):
 
 
     def select(self, val):
-        """通过名称选择机构"""
+        """通过名称选择"""
         self.open_check()
         val = f'.//*[text()="{val}"]'
         self.action.click(x=val)

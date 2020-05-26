@@ -17,7 +17,7 @@ class TestLoginPage:
 
     @allure.severity(allure.severity_level.NORMAL)
     def test_test_flag_is_not_presence(self, login_as):
-        """测试标志不存在"""
+        """测试标志不存在,此用例区分测试环境与生产环境"""
         page = login_as("", do_login=False)
         with pytest.raises(NoSuchElementException):
             print(page.test_flag)

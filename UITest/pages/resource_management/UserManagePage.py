@@ -31,7 +31,7 @@ class UserManagePage(IndexPage):
         {"部门":"","编制类型":""}
         :return:
         """
-        with allure.step("查询用户"):
+        with allure.step(f"查询用户:查询条件>>>{info}"):
             _select_something(self, self.department_drop, info.get("部门"))
             _select_something(self, self.preparation_type_drop, info.get("编制类型"))
             self.query_button.click()
@@ -86,9 +86,9 @@ class UserManagePage(IndexPage):
             return DivTable(self._table, {"css": "p>span"}, {"css": ".gwj-table-box-tableItem"}, {"x": "./div"})
 
         def select_row_by_name(self, name):
-            """通过名称选择表格中对应行"""
+            """通过名称选择表格中对应行的label框"""
             if name == "全部":
-                self.click(el=self._table.find_element_by_xpath('//*[text()="姓名"]/parent::p//input'))
+                self.click(el=self._table.find_element_by_xpath('.//*[text()="姓名"]/parent::p//input'))
             else:
                 self.click(el=self._table.find_element_by_xpath(f'.//*[text()="{name}"]/parent::div//input'))
             return self
@@ -98,6 +98,17 @@ class UserManagePage(IndexPage):
             els = self._table.find_elements_by_css_selector(".ant-checkbox-input")
             self.click(el=els[index])
             return self
+
+        def select_role_by_name(self, name, role_name):
+            """通过用户名字选择角色类型"""
+            tr = None
+            for tr in getattr(self.table, "_trs"):
+                if name in tr.get_attribute("innerText"):
+                    break
+            else:
+                logger.error(f"没有找到>>>{name}>>>对应的人员")
+            if tr:
+                _select_something(self, tr.find_element_by_xpath("(.//div[@aria-controls])[1]"), role_name)
 
 
 def _select_something(self, el, val):

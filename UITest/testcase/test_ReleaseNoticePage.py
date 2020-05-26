@@ -6,9 +6,8 @@ from UITest.common.page_manage import pm
 
 
 @pytest.fixture()
-def switch_to_notice_page(login_as):
+def switch_to_page(index_page):
     """切换至发布通知界面"""
-    index_page = login_as("D")
     index_page.driver.refresh()
 
     with allure.step("切换至发布通知界面"):
@@ -25,13 +24,13 @@ def switch_to_notice_page(login_as):
 @allure.feature("考情综合管理->通知公告->通知管理->发布通知")
 class TestReleaseNoticePage:
 
-    def test_send_notice(self, switch_to_notice_page):
+    def test_send_notice(self, switch_to_page):
         """测试发布通知"""
         title = "测试标题" + f.sentence(3)
         content = "测试内容\n" + f.text(500)
 
         with allure.step("发布通知"):
-            my_notice_page = switch_to_notice_page.send_notice(title, "全部", content)
+            my_notice_page = switch_to_page.send_notice(title, "全部", content)
         with allure.step("检查通知发布情况"):
             page = my_notice_page.check_detail(title)
             page.screenshot_in_allure("检查通知发布情况")
