@@ -12,6 +12,7 @@ logger.setLevel(logging.INFO)
 
 
 class UserManagePage(IndexPage):
+    __page_name = "用户管理"
     department_drop = El("部门下拉框", x='(//div[@aria-controls])[1]')
     preparation_type_drop = El("编制类型下拉框", x='(//div[@aria-controls])[2]')
     query_button = El("查询按钮", x='//button[string()="查询"]')

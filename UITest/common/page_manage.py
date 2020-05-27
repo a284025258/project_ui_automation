@@ -2,19 +2,27 @@ class PageManage:
     """
     页面管理类
     """
+    _pages = {}
 
     def __init__(self, package):
         self.package = package
-        self.pages = self._pages()
+        self.__get_pages()
+        self.__get_name_pages()
 
-    def _pages(self):
+    @property
+    def pages(self):
+        return self._pages.copy()
+
+    def __get_pages(self):
         modules = import_submodules(self.package)
-        pages = {}
-        for k, v in modules.items():
-            if hasattr(v, k):
-                pages[k] = getattr(v, k)
+        for module_name, module_class in modules.items():
+            if hasattr(module_class, module_name):
+                self._pages[module_name] = getattr(module_class, module_name)
 
-        return pages
+    def __get_name_pages(self):
+        for _, page_class in self.pages.items():
+            if hasattr(page_class, f"_{page_class.__name__}__page_name"):
+                self._pages[getattr(page_class, f"_{page_class.__name__}__page_name")] = page_class
 
     def __call__(self, page_name):
         try:
@@ -30,6 +38,7 @@ def import_submodules(package, recursive=True):
 
     From http://stackoverflow.com/questions/3365740/how-to-import-all-submodules
 
+    :param recursive:
     :param package: package (name or actual module)
     :type package: str | module
     :rtype: dict[str, types.ModuleType]
@@ -51,3 +60,4 @@ pm = PageManage("UITest.pages")
 
 if __name__ == '__main__':
     print(pm.pages)
+

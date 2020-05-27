@@ -2,7 +2,6 @@
 @author Ymangz
 
 """
-from time import sleep
 from typing import List
 
 import allure
@@ -11,13 +10,13 @@ from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 
 from UITest.common.page_action import PageAction
-from UITest.config import Start_Url
 
 
 class Page:
     """
     页面类基类
     """
+    __page_name = None
 
     def __init__(self, driver_or_page):
         if isinstance(driver_or_page, Page):
@@ -38,19 +37,6 @@ class Page:
         """
         from UITest.common.page_manage import pm
         return pm
-
-    def _clear_cache(self):
-        """chrome清除缓存，返回登陆界面"""
-        self.driver.get("chrome://settings/privacy")
-        # 打开清除缓存界面
-        # shadow-root 解决   https://developer.mozilla.org/zh-CN/docs/Web/API/Element/shadowRoot
-        sleep(0.5)
-        self.driver.execute_script(
-            """document.querySelector('settings-ui').shadowRoot.querySelector('#main').shadowRoot.querySelector('settings-basic-page').shadowRoot.querySelector("#basicPage settings-section[section='privacy'] settings-privacy-page").shadowRoot.querySelector('#pages div #clearBrowsingData').click()""")
-        sleep(0.5)
-        self.driver.execute_script(
-            """document.querySelector('settings-ui').shadowRoot.querySelector('#main').shadowRoot.querySelector('settings-basic-page').shadowRoot.querySelector("#basicPage settings-section[section='privacy'] settings-privacy-page").shadowRoot.querySelector('settings-clear-browsing-data-dialog').shadowRoot.querySelector('#clearBrowsingDataConfirm').click()""")
-        self.driver.get(Start_Url)
 
     def find_element(self, *, mode="L", **locator):
         """找到元素后会自动标记"""
@@ -160,7 +146,7 @@ class Els(El):
             raise ValueError("BadUsage:need use in a Page-like Object")
         if self._time_out:
             with instance.action.SetPageActionTime(instance.action, self._time_out) as action:
-                els = action.find_elements(mode=self.mode,lazy=self.lazy, **self.locator)
+                els = action.find_elements(mode=self.mode, lazy=self.lazy, **self.locator)
             return els
         els = instance.action.find_elements(mode=self.mode, lazy=self.lazy, **self.locator)
         return els

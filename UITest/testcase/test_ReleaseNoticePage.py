@@ -19,6 +19,7 @@ def switch_to_page(index_page):
 
     yield release_notice_page
 
+
 @pytest.mark.skip("界面调整")
 @allure.severity(allure.severity_level.NORMAL)
 @allure.feature("考情综合管理->通知公告->通知管理->发布通知")

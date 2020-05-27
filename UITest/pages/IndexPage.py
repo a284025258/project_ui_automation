@@ -23,6 +23,7 @@ class IndexPage(Page):
         |   |                                       |
         ---------------------------------------------
         """
+    __page_name = "导航页"
     # 顶部
     title = El(describe="标题框", css="div.xt-title span")
     top_menu = Els(describe="顶部菜单栏", css="header .ant-menu-item.ant-menu-item-only-child")
@@ -34,7 +35,6 @@ class IndexPage(Page):
     index_iframe = El(describe="iframe定位器", css="iframe.xt-mainIframe")
 
     is_login = True
-
 
     def select_top_menu(self, by):
         """
@@ -56,6 +56,8 @@ class IndexPage(Page):
         self.driver.switch_to.default_content()
         self.click(x=f"//*[text()='{by}']")
         self._switch_in()
+        if by in self.pm.pages:
+            return self.pm(by)(self)
         return self
 
     def logout(self):
@@ -65,6 +67,7 @@ class IndexPage(Page):
             return self._choice_user_drop_down_menu("安全退出")
         except WebDriverException:
             return self
+
     def _choice_user_drop_down_menu(self, by):
         """
         通过菜单名或者index来选择右上角的下拉菜单

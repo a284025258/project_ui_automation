@@ -14,6 +14,7 @@ logger.setLevel(logging.INFO)
 
 
 class LoginPage(Page):
+    __page_name = "登陆页面"
     username = El("用户名输入框", name="myuser")
     password = El("密码输入框", css="input[placeholder='请输入密码']")
     login_button = El("登录按钮", css="div.yh-login-btn > button")

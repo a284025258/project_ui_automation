@@ -15,6 +15,7 @@ logger.setLevel(logging.INFO)
 
 
 class PeopleManagePage(IndexPage):
+    __page_name = "人员管理"
     org_select_open = El('部门选择', css='#select .ant-select-selection')
     com_select_open = El('编制类型', css='#compile .ant-select-selection')
     job_select_open = El('工作状态', css='#jobtype .ant-select-selection')

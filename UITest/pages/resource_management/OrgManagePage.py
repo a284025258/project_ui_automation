@@ -19,6 +19,7 @@ school_org_list = ["小学", "初中", "高中", "完中（初中高中）", "�
 
 class OrgManagePage(IndexPage):
     """部门管理页面"""
+    __page_name = "部门管理"
 
     def switch_tab(self, tab_name):
         with allure.step(f"切换至{tab_name}"):
@@ -165,7 +166,7 @@ class DepartmentInfoMaintainPage(OrgManagePage):
              "英语四六级B级考试", "中小学教师资格考试", "英语等级考试（PETS）", "书画等级考试（CCPT）",
              "高校教师技能考试", "高校自主选拔测试", "高校教师理论考试", "剑桥少儿英语（YLE）"]
 
-            @return:
+            :return: DepartmentInfoMaintainPage
             """
 
             department_name = info["d_name"]
@@ -173,7 +174,7 @@ class DepartmentInfoMaintainPage(OrgManagePage):
             exam_projects = info["d_domain"]
 
             self.switch_to_frame(locator="main-body", switch_out=False)
-            with allure.step("添加部门"):
+            with allure.step(f"添加部门:部门信息>>>{info}"):
                 self.click(self.department_name)
                 self.department_name.send_keys(department_name)
 

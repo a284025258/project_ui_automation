@@ -7,6 +7,7 @@ from UITest.pages.IndexPage import IndexPage
 
 class LocationManagePage(IndexPage):
     """场所管理主界面"""
+    __page_name = "物理场所管理"
     site_building_management_button = El("场所建筑管理按钮", lt='场所建筑管理')
     add_site_button = El("新增场所按钮", lt='新增场所')
 
