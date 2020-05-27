@@ -18,7 +18,7 @@ def switch_to_page(index_page):
     """切换至机构管理"""
     index_page.driver.refresh()
     with allure.step("切换至机构管理"):
-        page = index_page.select_top_menu("统一基础资源管理") \
+        page = index_page.select_top_menu(0) \
             .select_aside_menu("机构管理")
         page: OrgManagePage = pm("OrgManagePage")(page)
     return page

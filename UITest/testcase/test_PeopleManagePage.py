@@ -3,7 +3,7 @@ import pytest
 
 from UITest.common.faker_info import f
 from UITest.config import UploadImg
-from common.utils.IDnumber import generate_ID
+from common.utils.IDnumber import generate_id
 
 
 @pytest.fixture()
@@ -11,7 +11,7 @@ def switch_to_page(index_page):
     """切换至人员管理"""
     index_page.driver.refresh()
     with allure.step("切换至人员管理"):
-        page = index_page.select_top_menu("统一资源管理") \
+        page = index_page.select_top_menu(0) \
             .select_aside_menu("人员管理")
         page = page.pm("PeopleManagePage")(page)
     return page
@@ -35,7 +35,7 @@ class TestPeopleManagePage:
         test_info_dict = {
             "编制类型": "在编",
             "基础信息": {
-                "姓名": f.name(), "身份证号": generate_ID(), "性别": "",
+                "姓名": f.name(), "身份证号": generate_id(), "性别": "",
                 "婚否": "未婚", "出生日期": f.date(), "民族": "汉族",
                 "邮箱": f.email(), "办公电话": f.phone_number(), "联系电话": f.phone_number(),
                 "上传头像图片地址": UploadImg

@@ -24,8 +24,9 @@ def login_as(browser):
     def _login_as(role_name, do_login=True):
         with allure.step("登陆"):
             _page = pm("LoginPage")(browser)
-            _page._clear_cache()
             _page.driver.get(Start_Url)
+            if _page.is_login:
+                _page.logout()
             if do_login:
                 return _page.login_as_role(role_name)
             return _page
@@ -38,12 +39,14 @@ def browser():
     global page
     if page is None:
         options = Options()
-        # options.add_argument('--headless')
-        options.add_argument('--start-maximized')
+        options.headless = True
+        if options.headless:
+            options.add_argument('--window-size=1920,1080')
+        else:
+            options.add_argument('--start-maximized')
         options.add_argument('--ignore-certificate-errors')  # 忽略https报错
-        options.add_argument('--disable-gpu')  # 谷歌文档提到需要加上这个属性来规避bug
         options.add_experimental_option("excludeSwitches", ['enable-automation'])
-        with Chrome(Driver_Path, options=options) as browser:
+        with Chrome(Driver_Path,options=options) as browser:
             page = Page(browser)
             yield page
 

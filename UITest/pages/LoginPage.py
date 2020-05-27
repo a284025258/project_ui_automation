@@ -33,6 +33,9 @@ class LoginPage(Page):
         else:
             return self
 
+    def logout(self):
+        return self.pm("IndexPage")(self).logout()
+
     def login_as_role(self, role_name):
         """通过配置的角色名登陆"""
         info = WEB_ROLE_CONF[role_name]
@@ -45,7 +48,7 @@ class LoginPage(Page):
         if max_time == 0:
             raise RuntimeError("验证码重试次数过多")
         self.verify_img.click()
-        tmp_png_name = os.path.join(STATIC_DIR, "tmp","tmp.png")
+        tmp_png_name = os.path.join(STATIC_DIR, "tmp", "tmp.png")
         self.verify_img.screenshot(tmp_png_name)
         verify_code = get_verify_code(tmp_png_name)
         self.verify_box.send_keys(verify_code)

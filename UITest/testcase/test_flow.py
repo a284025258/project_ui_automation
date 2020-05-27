@@ -28,7 +28,7 @@ class TestFlow:
             "d_type": "综合部门",
             "d_domain": ["上半年英语四六级B级考试", "剑桥少儿英语", "统一考试"]
         }
-        page = index_page.select_top_menu("统一资源管理").select_aside_menu("机构管理")
+        page = index_page.select_top_menu(0).select_aside_menu("机构管理")
         page = pm("OrgManagePage")(page)
         page: OrgManagePage
         page.switch_tab("部门信息维护").click_add_department_btn().add_department(test_info)

@@ -9,7 +9,7 @@ def switch_to_page(index_page):
     """切换页面"""
     index_page.driver.refresh()
     with allure.step("切换至用户管理"):
-        page = index_page.select_top_menu("统一基础资源管理") \
+        page = index_page.select_top_menu(0) \
             .select_aside_menu("用户管理")
         page: UserManagePage = page.pm("UserManagePage")(page)
     return page

@@ -1,6 +1,8 @@
 import logging
 import re
 
+from selenium.common.exceptions import WebDriverException
+
 from UITest.common.po_base import El, Els, Page
 from UITest.utils.selection import select_el
 
@@ -25,9 +27,7 @@ class IndexPage(Page):
     title = El(describe="标题框", css="div.xt-title span")
     top_menu = Els(describe="顶部菜单栏", css="header .ant-menu-item.ant-menu-item-only-child")
     user_info_box = El(describe="用户信息框体", css=".xt-uinfo-name")
-    org_info = El(describe="机构信息", xpath="/font[1]")
-    user_info = El(describe="用户信息", xpath="/font[2]")
-    user_info_drop_down = Els(describe="下拉菜单", css=".ant-dropdown.ant-dropdown-placement-bottomCenter li")
+    user_info_drop_down = Els(describe="下拉菜单", mode="V", css=".ant-dropdown.ant-dropdown-placement-bottomCenter li")
     # 侧边
     aside_menu = Els(describe="侧边栏菜单栏", css="aside li")
     # 主页面定位
@@ -35,28 +35,6 @@ class IndexPage(Page):
 
     is_login = True
 
-    def _switch_in(self):
-        try:
-            self.switch_to_frame()
-        except Exception as exc:
-            logger.error(exc)
-            pass
-
-    def choice_user_drop_down_menu(self, by):
-        """
-        通过菜单名或者index来选择右上角的下拉菜单
-        :param by:
-        :return:
-        """
-        self.hover(self.user_info)
-        el = select_el(self.user_info_drop_down, by)
-        el.click()
-        if by in ["个人信息", 0]:
-            return UserInfoBox(self)
-        elif by in ["修改密码", 1]:
-            return PassWordChangeBox(self)
-        elif by in ["安全退出", 2]:
-            return self.pm()("LoginPage")(self)
 
     def select_top_menu(self, by):
         """
@@ -73,12 +51,42 @@ class IndexPage(Page):
         """
         通过传入的名称列表选择对应侧边菜单
         :param by:
-        @return:
+        :return:
         """
         self.driver.switch_to.default_content()
         self.click(x=f"//*[text()='{by}']")
         self._switch_in()
         return self
+
+    def logout(self):
+        """退出登录"""
+        try:
+            self.driver.switch_to.default_content()
+            return self._choice_user_drop_down_menu("安全退出")
+        except WebDriverException:
+            return self
+    def _choice_user_drop_down_menu(self, by):
+        """
+        通过菜单名或者index来选择右上角的下拉菜单
+        :param by:
+        :return:
+        """
+        self.hover(self.user_info_box)
+        el = select_el(self.user_info_drop_down, by)
+        el.click()
+        if by in ["个人信息", 0]:
+            return UserInfoBox(self)
+        elif by in ["修改密码", 1]:
+            return PassWordChangeBox(self)
+        elif by in ["安全退出", 2]:
+            return self.pm("LoginPage")(self)
+
+    def _switch_in(self):
+        try:
+            self.switch_to_frame()
+        except Exception as exc:
+            logger.error(exc)
+            pass
 
 
 class UserInfoBox(Page):

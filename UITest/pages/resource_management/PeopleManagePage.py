@@ -1,6 +1,7 @@
 import logging
 
 import allure
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.keys import Keys
 
 from UITest.common.po_base import El
@@ -254,7 +255,10 @@ class NewPeoplePage(IndexPage):
                 self.original_work_unit_box.send_keys(info_dict["原工作单位"])
 
             self.screenshot_in_allure("填写其他信息")
-        # 高分辨率适配
-        self.action.scroll_by(0,1000,el=self.find_element(css=".scrollbar-container.ps.ps--active-y"))
+        try:
+            # 高分辨率适配
+            self.action.scroll_by(0, 1000, el=self.find_element(css=".scrollbar-container.ps.ps--active-y"))
+        except NoSuchElementException:
+            logger.info("不需要滑动屏幕")
         self.save_btn.click()
         return PeopleManagePage(self)
