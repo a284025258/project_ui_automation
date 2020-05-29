@@ -40,6 +40,7 @@ def browser():
     if page is None:
         options = Options()
         options.headless = True
+        options.add_argument('--no-sandbox')
         if options.headless:
             options.add_argument('--window-size=1920,1080')
         else:
