@@ -17,7 +17,7 @@ class LoginPage(Page):
     __page_name = "登陆页面"
     username = El("用户名输入框", name="myuser")
     password = El("密码输入框", css="input[placeholder='请输入密码']")
-    login_button = El("登录按钮", css="div.yh-login-btn > button")
+    login_button = El("登录按钮", css="div.yh-login-btn > button", time_out=1)
     message_box = El("登录提示信息", css=".ant-message", mode="V")
     verify_box = El("验证码输入框", x="//*[@placeholder='请输入验证码']")
     verify_img = El("验证码图片", css="img[alt]")
@@ -42,21 +42,28 @@ class LoginPage(Page):
         info = WEB_ROLE_CONF[role_name]
         return self.login(*info)
 
-    def verify(self, max_time=30):
+    def verify(self, max_time=10):
         """
         验证码验证实现
         """
         if max_time == 0:
             raise RuntimeError("验证码重试次数过多")
-        self.verify_img.click()
-        tmp_png_name = os.path.join(STATIC_DIR, "tmp", "tmp.png")
-        self.verify_img.screenshot(tmp_png_name)
-        verify_code = get_verify_code(tmp_png_name)
-        self.verify_box.send_keys(verify_code)
-        self.login_button.click()
         if self.is_login:
             return True
+        tmp_png_name = os.path.join(STATIC_DIR, "tmp", "tmp.png")
+
+        # 智能识别验证码逻辑
+        verify_code = ""
+        while len(verify_code) != 5:
+            self.verify_img.click()
+            self.verify_img.screenshot(tmp_png_name)
+            verify_code = get_verify_code(tmp_png_name)
+
+        self.verify_box.send_keys(verify_code)
+        self.login_button.click()
         sleep(0.5)
+        if self.is_login:
+            return True
         max_time -= 1
         return self.verify(max_time)
 

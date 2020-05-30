@@ -134,7 +134,6 @@ class DepartmentInfoMaintainPage(OrgManagePage):
         return self.NewDepartment(self)
 
     def get_tr(self, info):
-        sleep(0.5)
         return Table(self.info_table).get_row(info)
 
     @property
@@ -155,9 +154,9 @@ class DepartmentInfoMaintainPage(OrgManagePage):
             """
             添加部门
             :param info = {
-                "d_name":部门名称,
-                "d_type":部门类别,
-                "d_domain":[部门分管考试项目]
+                "部门名称":部门名称,
+                "部门类别":部门类别,
+                "部门分管考试项目":[部门分管考试项目]
             }
              department_name: 部门名称
              department_type: 部门类别  ["管理部门","业务部门","技术部门","综合部门","后勤部门"]
@@ -169,9 +168,9 @@ class DepartmentInfoMaintainPage(OrgManagePage):
             :return: DepartmentInfoMaintainPage
             """
 
-            department_name = info["d_name"]
-            department_type = info["d_type"]
-            exam_projects = info["d_domain"]
+            department_name = info["部门名称"]
+            department_type = info["部门类别"]
+            exam_projects = info["部门分管考试项目"]
 
             self.switch_to_frame(locator="main-body", switch_out=False)
             with allure.step(f"添加部门:部门信息>>>{info}"):
@@ -262,50 +261,33 @@ class SubOrgManagePage(OrgManagePage):
         return Table(self.info_table)
 
     @property
+    def _org_type_tree(self):
+        """机构-类型-树形下拉框"""
+        return TreeDropDownBox(self.query_org_type_drop_box, self.query_org_type_drop_box_opener)
+
+    @property
+    def _org_name_tree(self):
+        """机构-名称-树形下拉框"""
+        return TreeDropDownBox(self.query_org_drop_box, self.query_org_drop_box_opener)
+
+    @property
     def org_type(self):
         """机构类型"""
-        return TreeDropDownBox(self.query_org_type_drop_box, self.query_org_type_drop_box_opener).value
+        return self._org_type_tree.value
 
     @property
     def org_name(self):
         """机构名称"""
-        return TreeDropDownBox(self.query_org_drop_box, self.query_org_drop_box_opener).value
+        return self._org_name_tree.value
 
     def select_org(self, *org_names):
-        tag = True
-        for i, org_name in enumerate(org_names, 1):
-            if i == len(org_names):
-                tag = False
-            self._select_org(org_name, tag)
-
-    def select_org_type(self, *org_types):
-        tag = True
-        for i, org_type in enumerate(org_types, 1):
-            if i == len(org_types):
-                tag = False
-            self._select_org_type(org_type, tag)
-
-    def _select_org(self, org_name, _open=False):
-        """
-        选择管理机构
-        :param _open: 展开机构
-        :param org_name: 机构名称
-        @return:
-        """
         tree = TreeDropDownBox(self.query_org_drop_box, self.query_org_drop_box_opener)
-        tree.open(org_name) if _open else tree.select(org_name)
+        tree.select_by_list(org_names)
         return self
 
-    def _select_org_type(self, org_type, _open=False):
-        """
-        选择机构类型
-        :param _open: 展开机构类型
-        :param org_type: 机构类型
-        @return:
-        """
+    def select_org_type(self, *org_types):
         tree = TreeDropDownBox(self.query_org_type_drop_box, self.query_org_type_drop_box_opener)
-        tree.open(org_type) if _open else tree.select(org_type)
-
+        tree.select_by_list(org_types)
         return self
 
     def search_org(self, org_name):

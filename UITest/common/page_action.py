@@ -179,7 +179,7 @@ class PageAction:
 
     class SetPageActionTime:
         def __init__(self, pa, time):
-            if not isinstance(pa, PageAction) or isinstance(time, int):
+            if not (isinstance(pa, PageAction) or isinstance(time, int)):
                 raise ValueError
             self.pa = pa
             self.time = time

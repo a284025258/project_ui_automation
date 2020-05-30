@@ -34,8 +34,6 @@ class IndexPage(Page):
     # 主页面定位
     index_iframe = El(describe="iframe定位器", css="iframe.xt-mainIframe")
 
-    is_login = True
-
     def select_top_menu(self, by):
         """
         通过输入的顶部菜单名称或者index来选择菜单

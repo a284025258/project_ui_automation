@@ -17,7 +17,6 @@ REPORT_XML_DIR = os.path.join(BASE_DIR, 'report/xml')
 # allure生成报告路径
 REPORT_HTML_DIR = os.path.join(BASE_DIR, 'report/html')
 
-
 # 邮件设置
 REPORT_HTML_FILE = os.path.join(STATIC_DIR, 'report.html')
 REPORT_LINK = "http://10.4.3.142:8080/report/index.html"
@@ -27,7 +26,6 @@ Mail_Conf = {
     "report_link": REPORT_LINK,
     "send_to": ['ymangz@foxmail.com', ]
 }
-
 
 # 数据库配置
 # DATABASES = 'mysql+pymysql://root:root@10.4.3.142:3306/test?charset=utf8'
@@ -46,3 +44,5 @@ API_ROLE_CONF = {
     # roleName : (account,password,appID)
     "sys_admin": ("S45", "gxeea@123", "EXSMS"),
 }
+# 是否有界面运行
+Have_Window = True

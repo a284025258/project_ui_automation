@@ -5,21 +5,21 @@ from selenium.webdriver.chrome.options import Options
 
 from UITest.common.page_manage import pm
 from UITest.common.po_base import Page
-from UITest.config import Driver_Path, Start_Url, WEB_ROLE_CONF
+from UITest.config import Driver_Path, Start_Url, WEB_ROLE_CONF, HandLess
 
-page = None
+page = None  # 全局page对象
 
 
 @pytest.fixture(scope="module", params=WEB_ROLE_CONF.keys())
 def index_page(login_as, request):
-    """登陆"""
+    """登陆后页面装置"""
     index_page = login_as(request.param)
     return index_page
 
 
 @pytest.fixture(scope="session")
 def login_as(browser):
-    """登陆fixture"""
+    """登陆装置"""
 
     def _login_as(role_name, do_login=True):
         with allure.step("登陆"):
@@ -36,10 +36,11 @@ def login_as(browser):
 
 @pytest.fixture(scope='session')
 def browser():
+    """浏览器启动装置"""
     global page
     if page is None:
         options = Options()
-        options.headless = True
+        options.headless = HandLess
         options.add_argument('--no-sandbox')
         if options.headless:
             options.add_argument('--window-size=1920,1080')
@@ -47,7 +48,7 @@ def browser():
             options.add_argument('--start-maximized')
         options.add_argument('--ignore-certificate-errors')  # 忽略https报错
         options.add_experimental_option("excludeSwitches", ['enable-automation'])
-        with Chrome(Driver_Path,options=options) as browser:
+        with Chrome(Driver_Path, options=options) as browser:
             page = Page(browser)
             yield page
 
@@ -55,10 +56,7 @@ def browser():
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_runtest_makereport(item, call):
     """
-    hook函数失败用例截图添加
-    @param item:
-    @param call:
-    @return:
+    hook函数失败用例截图添加装置
     """
     global page
     # execute all other hooks to obtain the report object

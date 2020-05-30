@@ -44,9 +44,9 @@ class TestOrgManagePage:
     def test_add_and_del_department(self, switch_to_page):
         """新增部门后删除该部门"""
         test_info = {
-            "d_name": "测试机构" + f.sentence(3),
-            "d_type": "综合部门",
-            "d_domain": ["上半年英语四六级B级考试", "剑桥少儿英语", "统一考试"]
+            "部门名称": "测试机构" + f.sentence(3),
+            "部门类别": "综合部门",
+            "部门分管考试项目": ["上半年英语四六级B级考试", "剑桥少儿英语", "统一考试"]
         }
         page = switch_to_page.switch_tab("部门信息维护")
         info = page.click_add_department_btn() \

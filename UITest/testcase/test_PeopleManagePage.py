@@ -29,8 +29,8 @@ class TestPeopleManagePage:
         page.query_people(test_info_dict)
         assert page.info_compliance
 
-    @pytest.mark.dev
-    def test_add_people(self, switch_to_page):
+    @pytest.mark.parametrize("s",range(99))
+    def test_add_people(self, switch_to_page,s):
         """测试增加人员"""
         test_info_dict = {
             "编制类型": "在编",

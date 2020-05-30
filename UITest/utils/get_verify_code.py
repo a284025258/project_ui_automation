@@ -9,7 +9,7 @@ from pytesseract import pytesseract
 
 
 def get_verify_code(img_path):
-    img_path=img_path.replace("\\","/")
+    img_path = img_path.replace("\\", "/")
     content = pytesseract.image_to_string(__process_image(img_path),
                                           config="--psm 6 --oem 3 -c tessedit_char_whitelist=0123456789")  # 解析图片
     return content
