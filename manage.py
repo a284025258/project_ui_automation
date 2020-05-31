@@ -3,7 +3,7 @@ import os
 
 import pytest
 
-from config import APITESTCASE_HOME, REPORT_XML_DIR, REPORT_HTML_FILE, UITESTCASE_HOME
+from config import APITESTCASE_HOME, REPORT_XML_DIR, REPORT_HTML_FILE, UITESTCASE_HOME, LocalIP
 
 
 def setup():
@@ -30,7 +30,7 @@ RUN_PATH = setup().api_path or []
 
 if __name__ == '__main__':
     opts = [
-        "-vv", "-s",
+        "-v", "-s",
         f"--html={REPORT_HTML_FILE}", "--self-contained-html",
         "--color=no", f"--alluredir={REPORT_XML_DIR}", "--clean-alluredir",
         # "--reruns=1", "--reruns-delay=1",
@@ -40,10 +40,9 @@ if __name__ == '__main__':
     if setup().mode in ["s", "starttest"]:
         opts.insert(0, APITESTCASE_HOME)
         pytest.main(opts)
-        os.system(f"allure serve -h 127.0.0.1 -p 8080 {REPORT_XML_DIR}")
     elif setup().mode in ["ui", "testui"]:
         opts.insert(0, UITESTCASE_HOME)
         opts.append("-m")
         opts.append("dev")
         pytest.main(opts)
-        os.system(f"allure serve -h 127.0.0.1 -p 8080 {REPORT_XML_DIR}")
+    os.system(f"allure serve -h {LocalIP} -p 8080 {REPORT_XML_DIR}")

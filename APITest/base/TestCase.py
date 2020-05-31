@@ -6,7 +6,7 @@ import allure
 import requests
 
 from APITest.base.authentication import JF_CEMS_4_0_TokenAuth
-from APITest.config import TimeoutTime
+from config import TimeoutTime
 from APITest.util.dictUitl import assert_dict_contain
 
 logger = logging.getLogger(__name__)

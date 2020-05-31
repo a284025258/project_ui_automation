@@ -6,7 +6,7 @@ from sqlalchemy import or_
 
 from APITest.base.TestCase import TestCase
 from APITest.util.get_session import get_session
-from APITest.config import SYS_CONF
+from config import API_SYS_CONF
 from APITest.module import ApiTestCaseData, Param, Module, Product
 
 logger = logging.getLogger(__name__)
@@ -14,7 +14,7 @@ logger.setLevel(logging.INFO)
 
 
 def _prepare_url(app_id, url):
-    return SYS_CONF[app_id]['host'] + url
+    return API_SYS_CONF[app_id]['host'] + url
 
 
 class PrepareTestData:

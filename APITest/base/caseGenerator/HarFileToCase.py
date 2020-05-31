@@ -8,7 +8,7 @@ import logging
 from jsonpath import jsonpath
 
 from APITest.util.get_session import get_session
-from APITest.config import SYS_CONF
+from config import API_SYS_CONF
 from APITest.module import ApiTestCaseData, Product
 
 logger = logging.getLogger(__name__)
@@ -22,7 +22,7 @@ class Har2Case:
     todo restful格式接口处理 eg /path/api/{id}
     todo 重复性校验：使用url与postdata进行校验
     """
-    hosts = {SYS_CONF[k]["host"]: k for k in SYS_CONF}  # { host : appid } eg {'http://10.20.5.176:9020': 'EXWSP'}
+    hosts = {API_SYS_CONF[k]["host"]: k for k in API_SYS_CONF}  # { host : appid } eg {'http://10.20.5.176:9020': 'EXWSP'}
 
     def __init__(self, har_file_path):
         """

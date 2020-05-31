@@ -4,7 +4,7 @@ import requests
 from jsonpath import jsonpath
 
 from APITest.base.interface.base_api import ABCAuthAPIBase
-from APITest.config import SYS_CONF, TimeoutTime
+from config import API_SYS_CONF, TimeoutTime
 from APITest.util.AESUtil import AESUtil
 
 logger = logging.getLogger(__name__)
@@ -92,12 +92,12 @@ class JF_EXWSP_4_0AuthApi(ABCAuthAPIBase):
 
     @property
     def host(self):
-        host = SYS_CONF[self.appid]['host']
+        host = API_SYS_CONF[self.appid]['host']
         return host
 
     @property
     def key(self):
-        _key = SYS_CONF[self.appid]['key']
+        _key = API_SYS_CONF[self.appid]['key']
         return _key
 
 

@@ -28,4 +28,5 @@ class WapperControl(BaseControl):
         :return: text > value > placeholder
         """
         ga = self.opener.get_attribute
-        return self.opener.text or ga("value") or ga("placeholder")
+        text = self.opener.text or ga("value") or ga("placeholder")
+        return text.strip()

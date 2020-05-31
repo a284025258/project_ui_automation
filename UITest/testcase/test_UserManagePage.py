@@ -23,6 +23,7 @@ class TestUserManagePage:
         page = switch_to_page
         assert page.query_user(test_info_dict).info_complite
 
+    @pytest.mark.skip("未完成")
     def test_add_user(self, switch_to_page):
         """添加用户"""
         role_name = ""
