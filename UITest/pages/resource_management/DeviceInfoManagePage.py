@@ -35,6 +35,8 @@ class DeviceInfoManageTab(DeviceInfoManagePage):
     search_input = El("搜索框", css="#deviceSearch")
     search_btn = El("搜索按钮", css="#btnSearch")
 
+    add_dev_btn = El("添加设备按钮", x="//*[text()='新增设备']")
+
     @property
     def info_compliance(self):
         """
@@ -108,8 +110,82 @@ class DeviceInfoManageTab(DeviceInfoManagePage):
         """设备表格"""
         return Table(self._table)
 
+    def click_add_dev_btn(self):
+        self.add_dev_btn.click()
+        return self.AddDevicePage(self)
+
     class AddDevicePage(IndexPage):
-        """"""
+        """新增设备页面"""
+        save_btn = El('保存按钮', x="//*[text()='保 存']")
+
+        com_btn = El('确定按钮', mode='I', x="//*[text()='确定']")
+        fast_add_btn = El('快速新增', mode='V', x="//*[text()='快速新增']")
+
+        def add_dev(self, info, fast=False):
+            """
+            添加设备
+            :param info:
+            {
+            "基础信息":{},
+            "其他信息":{},
+            }
+            :param fast: 快速新增
+            :return:
+            """
+            self._input_base_info(info["基础信息"])
+            self._input_other_info(info["其他信息"])
+            if fast:
+                self.fast_add_btn.click()
+            else:
+                self.save_btn.click()
+            self.com_btn.click()
+            return self if fast else DeviceInfoManageTab(self)
+
+        def __get_control(self, label_name):
+            """
+            选择页面控件
+            :param label_name:
+            :return:
+            """
+            val = f"(//label[contains(string(),'{label_name}')]/following-sibling::div/*)[1]"
+            el = self.find_element(x=val)
+            if el.tag_name == "div":
+                return DropDownBox(el.find_element_by_xpath('./div'), el)
+            else:
+                return el
+
+        def _input_base_info(self, info):
+            """
+            基础信息录入
+            :param info:
+            {
+                "设备类别": "",
+                "设备编号": "", "设备名称": "",
+                "设备状态": "", "设备厂商": ""
+            }
+            :return:
+            """
+            with allure.step("基础信息录入"):
+                logger.info(f"录入设备基础信息:>>>{info}")
+                self.__get_control("设备类别").select(info["设备类别"])
+                if info.get("设备编号", ""):
+                    self.__get_control("设备编号").send_keys(info["设备编号"])
+                self.__get_control("设备名称").select(info["设备名称"])
+                self.__get_control("设备状态").select(info["设备状态"])
+                self.__get_control("设备厂商").select(info["设备厂商"])
+            return self
+
+        def _input_other_info(self, info):
+            """
+            输入其他信息
+            :param info:
+            :return:
+            """
+            with allure.step("其他信息录入"):
+                logger.info(f"录入设备其他信息:>>>{info}")
+                for key, val in info.items():
+                    self.__get_control(key).send_keys(val)
+            return self
 
 
 class DeviceManageLogTab(DeviceInfoManagePage):

@@ -3,25 +3,12 @@ import re
 from random import randint
 
 import allure
-import pytest
 
 from UITest.common.faker_info import f
-from UITest.common.page_manage import pm
-from UITest.pages.resource_management.OrgManagePage import OrgManagePage, SubOrgManagePage
+from UITest.pages.resource_management.OrgManagePage import SubOrgManagePage
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
-
-
-@pytest.fixture()
-def switch_to_page(index_page):
-    """切换至机构管理"""
-    index_page.driver.refresh()
-    with allure.step("切换至机构管理"):
-        page = index_page.select_top_menu(0) \
-            .select_aside_menu("机构管理")
-        page: OrgManagePage = pm("OrgManagePage")(page)
-    return page
 
 
 @allure.severity(allure.severity_level.CRITICAL)
@@ -30,7 +17,7 @@ class TestOrgManagePage:
     @allure.story("机构信息维护")
     def test_check_info(self, switch_to_page):
         """机构信息维护，部门信息检查"""
-        page = switch_to_page.switch_tab("机构信息维护")
+        page = switch_to_page("机构管理").switch_tab("机构信息维护")
         base_info = page.base_info
         logger.info(base_info)
         other_info = page.other_info
@@ -48,7 +35,7 @@ class TestOrgManagePage:
             "部门类别": "综合部门",
             "部门分管考试项目": ["上半年英语四六级B级考试", "剑桥少儿英语", "统一考试"]
         }
-        page = switch_to_page.switch_tab("部门信息维护")
+        page = switch_to_page("机构管理").switch_tab("部门信息维护")
         info = page.click_add_department_btn() \
             .add_department(test_info) \
             .get_tr(test_info["d_name"])
@@ -65,7 +52,7 @@ class TestOrgManagePage:
     def test_search_department(self, switch_to_page):
         """搜索机构"""
         org_name = "都江堰"
-        page = switch_to_page.switch_tab("下级机构管理")
+        page = switch_to_page("机构管理").switch_tab("下级机构管理")
         s_org_names = page.search_org(org_name).table.info["机构名称"]
         for s_org_name in s_org_names:
             assert org_name in s_org_name
@@ -75,7 +62,7 @@ class TestOrgManagePage:
         """查询机构"""
         org_list = ["四川省教育考试院", "成都市教育考试院", "都江堰市教育考试中心", "四川省都江堰中学"]
         org_type_list = ["学校", "高中"]
-        page = switch_to_page.switch_tab("下级机构管理")
+        page = switch_to_page("机构管理").switch_tab("下级机构管理")
         page: SubOrgManagePage
         with allure.step("查询机构"):
             # 选择管理机构
@@ -105,7 +92,7 @@ class TestOrgManagePage:
         org_ab = "测试机构缩写" + f.sentence(2)
         area_name = "测试考区名称" + f.sentence(2) if school_type == "大学" else ""
         page: SubOrgManagePage
-        page = switch_to_page.switch_tab("下级机构管理")
+        page = switch_to_page("机构管理").switch_tab("下级机构管理")
         info = page.click_add_org_btn() \
             .add_org_school(school_type, org_num, org_name, org_ab, area_name) \
             .search_org(org_name).table.info

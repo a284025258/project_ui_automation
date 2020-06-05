@@ -2,7 +2,7 @@ import allure
 import pytest
 from selenium.common.exceptions import NoSuchElementException
 
-from UITest.config import WEB_ROLE_CONF
+from config import WEB_ROLE_CONF
 
 
 @allure.feature("首页->登陆")

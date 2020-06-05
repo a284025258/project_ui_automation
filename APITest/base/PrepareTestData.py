@@ -5,9 +5,9 @@ import re
 from sqlalchemy import or_
 
 from APITest.base.TestCase import TestCase
+from APITest.module import ApiTestCaseData, Param, Module, Product
 from APITest.util.get_session import get_session
 from config import API_SYS_CONF
-from APITest.module import ApiTestCaseData, Param, Module, Product
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)

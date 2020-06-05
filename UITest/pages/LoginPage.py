@@ -5,7 +5,7 @@ from time import sleep
 from selenium.common.exceptions import NoSuchElementException
 
 from UITest.common.po_base import El, Page
-from UITest.config import WEB_ROLE_CONF
+from config import WEB_ROLE_CONF
 from UITest.utils.get_verify_code import get_verify_code
 from config import STATIC_DIR
 

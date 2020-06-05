@@ -1,7 +1,5 @@
 from time import sleep
 
-import allure
-
 from UITest.common.po_base import El, Els
 from UITest.pages.IndexPage import IndexPage
 

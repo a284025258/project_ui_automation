@@ -4,8 +4,8 @@ import requests
 from jsonpath import jsonpath
 
 from APITest.base.interface.base_api import ABCAuthAPIBase
-from config import API_SYS_CONF, TimeoutTime
 from APITest.util.AESUtil import AESUtil
+from config import API_SYS_CONF, TimeoutTime
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)

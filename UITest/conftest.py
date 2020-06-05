@@ -5,7 +5,8 @@ from selenium.webdriver.chrome.options import Options
 
 from UITest.common.page_manage import pm
 from UITest.common.po_base import Page
-from UITest.config import Driver_Path, Start_Url, WEB_ROLE_CONF, HandLess
+from UITest.config import Driver_Path, Start_Url, HandLess
+from config import WEB_ROLE_CONF
 
 page = None  # 全局page对象
 
@@ -32,6 +33,20 @@ def login_as(browser):
             return _page
 
     return _login_as
+
+
+@pytest.fixture()
+def switch_to_page(index_page):
+    """切换至页面菜单"""
+
+    def _switch_to_page(page_name):
+        index_page.driver.refresh()
+        with allure.step(f"切换至{page_name}"):
+            page = index_page.select_top_menu(0) \
+                .select_aside_menu(page_name)
+        return page.pm(page_name)(page)
+
+    return _switch_to_page
 
 
 @pytest.fixture(scope='session')

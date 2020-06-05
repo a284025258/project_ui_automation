@@ -52,7 +52,11 @@ class IndexPage(Page):
         :return:
         """
         self.driver.switch_to.default_content()
-        self.click(x=f"//*[text()='{by}']")
+        if isinstance(by, list):
+            for _by in by:
+                self.click(x=f"//*[text()='{_by}']")
+        else:
+            self.click(x=f"//*[text()='{by}']")
         self._switch_in()
         if by in self.pm.pages:
             return self.pm(by)(self)

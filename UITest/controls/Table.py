@@ -1,8 +1,12 @@
+import logging
 from time import sleep
 
 from selenium.webdriver.common.by import By
 
 from UITest.common.page_control import BaseControl
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 
 class Table(BaseControl):
@@ -11,10 +15,13 @@ class Table(BaseControl):
     def get_row(self, info):
         """通过一个数据获取行数据"""
         sleep(0.5)
+        logger.info(f"尝试获取行信息>>>{info}")
         for data in self.data:
             if info in data:
+                logger.info(f"获取行信息>>>{data}")
                 return data
         else:
+            logger.error(f"获取行信息失败>>>None")
             return None
 
     @property

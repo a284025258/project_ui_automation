@@ -7,9 +7,9 @@ import logging
 
 from jsonpath import jsonpath
 
+from APITest.module import ApiTestCaseData, Product
 from APITest.util.get_session import get_session
 from config import API_SYS_CONF
-from APITest.module import ApiTestCaseData, Product
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -54,7 +54,6 @@ class Har2Case:
             _ = json.loads(f.read())
         version = _["log"]["version"]
         if "1.2" > version or version > "2":
-            # todo 其他版本的har文件
             raise ValueError(f"不支持的har版本->{version}")
         result = _["log"]["entries"]
         del _
