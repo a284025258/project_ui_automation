@@ -9,7 +9,7 @@ pytest-rerunfailures
 pytest-assume==2.2.1
 pytest-ordering==0.6
 pytest-html
-requests==2.23.0
+requests==2.31.0
 selenium==3.141.0
 SQLAlchemy==1.3.16
 yagmail~=0.11.224
